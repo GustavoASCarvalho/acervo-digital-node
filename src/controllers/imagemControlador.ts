@@ -15,11 +15,9 @@ export class ImagemControlador {
 			usuarioRepositorio,
 			imagemRepositorio,
 		);
-		try {
-			await criandoImagem.executar(data);
-		} catch (err) {
-			return res.status(404).json({ message: err });
-		}
+
+		await criandoImagem.executar(data);
+
 		return res.status(201).json({ message: 'sucesso' });
 	}
 }

@@ -12,11 +12,8 @@ export class UsuarioControlador {
 			req.body;
 		const usuarioRepositorio = new PrismaUsuarioRepositorio();
 		const criandoUsuario = new CriandoUsuario(usuarioRepositorio);
-		try {
-			await criandoUsuario.executar({ nome, email, senha, imagemDePerfil });
-		} catch (err) {
-			return res.status(404).json({ message: err });
-		}
+
+		await criandoUsuario.executar({ nome, email, senha, imagemDePerfil });
 		return res.status(201).json({ message: 'sucesso' });
 	}
 }
