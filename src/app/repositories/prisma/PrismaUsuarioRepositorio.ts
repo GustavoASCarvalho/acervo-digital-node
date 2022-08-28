@@ -1,7 +1,6 @@
 import { prisma } from '../../../prisma';
 import { CargosDoUsuarioEnum, Usuario } from '../../../domain/entities/usuario';
 import { UsuarioRepositorio } from '../UsuarioRepositorio';
-import { Imagem } from '../../../domain/entities/imagem';
 
 export class PrismaUsuarioRepositorio implements UsuarioRepositorio {
 	async findById(id: string): Promise<Usuario | null> {

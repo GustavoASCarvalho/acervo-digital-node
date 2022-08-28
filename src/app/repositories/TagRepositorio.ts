@@ -1,5 +1,6 @@
-import { Tag } from "../../domain/entities/tag";
+import { Tag } from '../../domain/entities/tag';
 
 export interface TagRepositorio {
-  findById(id: string): Promise<Tag | null>;
+	findById(id: string): Promise<Tag | null>;
+	create(data: Tag): Promise<Tag>;
 }
