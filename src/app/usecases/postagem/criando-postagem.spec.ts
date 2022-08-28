@@ -1,4 +1,5 @@
 import { InMemoryUsuarioRepositorio } from '../../../../tests/repositories/in-memory-usuario-repositorio';
+import { InMemoryPostagemRepositorio } from '../../../../tests/repositories/in-memory-postagem-repositorio';
 import { Postagem } from '../../../domain/entities/postagem';
 import {
 	CargosDoUsuarioEnum,
@@ -10,6 +11,7 @@ import { CriandoPostagem } from './criando-postagem';
 describe('criando postagem usecase', () => {
 	it('deve criar uma postagem com sucesso', async () => {
 		const usuarioRepositorio = new InMemoryUsuarioRepositorio();
+		const postagemRepositorio = new InMemoryPostagemRepositorio();
 		const propriedadesDoUsuario: PropriedadesDoUsuario = {
 			nome: 'Usuario',
 			email: 'usuario@email.com',
@@ -22,7 +24,7 @@ describe('criando postagem usecase', () => {
 
 		usuarioRepositorio.items.push(usuario);
 
-		const sut = new CriandoPostagem(usuarioRepositorio);
+		const sut = new CriandoPostagem(usuarioRepositorio, postagemRepositorio);
 		const res = await sut.executar({
 			descricao: 'descrição',
 			idDoUsuario: usuario.id,
@@ -30,5 +32,21 @@ describe('criando postagem usecase', () => {
 			titulo: 'titulo',
 		});
 		expect(res).toBeInstanceOf(Postagem);
+	});
+	it('deve disparar um novo erro ao criar uma postagem sem usuario vinculado', async () => {
+		const usuarioRepositorio = new InMemoryUsuarioRepositorio();
+		const postagemRepositorio = new InMemoryPostagemRepositorio();
+		const sut = new CriandoPostagem(usuarioRepositorio, postagemRepositorio);
+
+		try {
+			await sut.executar({
+				descricao: 'descrição',
+				idDoUsuario: 'idDoUsuario inexistente',
+				texto: 'texto',
+				titulo: 'titulo',
+			});
+		} catch (err) {
+			expect(err).toBeInstanceOf(Error);
+		}
 	});
 });
