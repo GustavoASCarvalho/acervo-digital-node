@@ -1,39 +1,45 @@
-import { Imagem } from "../../../domain/entities/imagem";
-import { UsuarioRepositorio } from "../../repositories/UsuarioRepositorio";
+import { Imagem } from '../../../domain/entities/imagem';
+import { ImagemRepositorio } from '../../repositories/ImagemRepositorio';
+import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 
 export type CriandoImagemRequisicao = {
-  nome: string;
-  data: string;
-  endereco: string;
-  idDoUsuario: string;
+	nome: string;
+	data: string;
+	endereco: string;
+	idDoUsuario: string;
 };
 
 export class CriandoImagem {
-  constructor(private usuarioRepositorio: UsuarioRepositorio) {}
+	constructor(
+		private usuarioRepositorio: UsuarioRepositorio,
+		private imagemRepositorio: ImagemRepositorio,
+	) {}
 
-  async executar({
-    nome,
-    data,
-    endereco,
-    idDoUsuario,
-  }: CriandoImagemRequisicao) {
-    const usuario = await this.usuarioRepositorio.findById(idDoUsuario);
+	async executar({
+		nome,
+		data,
+		endereco,
+		idDoUsuario,
+	}: CriandoImagemRequisicao) {
+		const usuario = await this.usuarioRepositorio.findById(idDoUsuario);
 
-    if (!usuario) {
-      throw new Error("Usuario não encontrado.");
-    }
+		if (!usuario) {
+			throw new Error("{code: 404, message: 'Usuario inexistente'}");
+		}
 
-    const imagem = Imagem.criar({
-      nome,
-      data,
-      endereco,
-      idDoUsuario,
-      latitude: "-232",
-      longitude: "-232",
-      url: "http://",
-      visualizacoes: 0,
-    });
+		const imagem = Imagem.criar({
+			nome,
+			data,
+			endereco,
+			idDoUsuario,
+			latitude: '-232',
+			longitude: '-232',
+			url: 'http://',
+			visualizacoes: 0,
+		});
 
-    return imagem;
-  }
+		await this.imagemRepositorio.create(imagem);
+
+		return imagem;
+	}
 }

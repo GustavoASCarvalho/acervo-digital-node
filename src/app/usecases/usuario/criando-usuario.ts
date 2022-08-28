@@ -1,4 +1,5 @@
 import { CargosDoUsuarioEnum, Usuario } from '../../../domain/entities/usuario';
+import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 
 export type CriandoUsuarioRequisicao = {
 	nome: string;
@@ -8,7 +9,7 @@ export type CriandoUsuarioRequisicao = {
 };
 
 export class CriandoUsuario {
-	constructor() {}
+	constructor(private usuarioRepositorio: UsuarioRepositorio) {}
 
 	async executar({
 		nome,
@@ -23,6 +24,8 @@ export class CriandoUsuario {
 			imagemDePerfil,
 			senha,
 		});
+
+		await this.usuarioRepositorio.create(usuario);
 
 		return usuario;
 	}
