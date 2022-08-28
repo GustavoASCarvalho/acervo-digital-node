@@ -26,14 +26,6 @@ export class Postagem extends Entidade<PropriedadesDaPostagem> {
 		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
-		const postagem = new Postagem(
-			props,
-			id,
-			criadoEm,
-			atualizadoEm,
-			deletadoEm,
-		);
-
-		return postagem;
+		return new Postagem(props, id, criadoEm, atualizadoEm, deletadoEm);
 	}
 }
