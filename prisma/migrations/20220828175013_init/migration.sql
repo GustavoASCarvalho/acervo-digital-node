@@ -37,7 +37,7 @@ CREATE TABLE "Postagem" (
     "idDoUsuario" TEXT NOT NULL,
     "criadoEm" DATETIME NOT NULL,
     "atualizadoEm" DATETIME NOT NULL,
-    "deletadoEm" DATETIME NOT NULL
+    "deletadoEm" DATETIME
 );
 
 -- CreateTable
@@ -47,7 +47,7 @@ CREATE TABLE "Tag" (
     "idDoUsuario" TEXT NOT NULL,
     "criadoEm" DATETIME NOT NULL,
     "atualizadoEm" DATETIME NOT NULL,
-    "deletadoEm" DATETIME NOT NULL
+    "deletadoEm" DATETIME
 );
 
 -- CreateIndex

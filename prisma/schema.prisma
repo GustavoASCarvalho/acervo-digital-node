@@ -43,7 +43,7 @@ model Imagem {
 }
 
 model Postagem {
-  id            String   @id
+  id            String    @id
   titulo        String
   descricao     String
   texto         String
@@ -51,14 +51,14 @@ model Postagem {
   idDoUsuario   String
   criadoEm      DateTime
   atualizadoEm  DateTime
-  deletadoEm    DateTime
+  deletadoEm    DateTime?
 }
 
 model Tag {
-  id           String   @id
+  id           String    @id
   nome         String
   idDoUsuario  String
   criadoEm     DateTime
   atualizadoEm DateTime
-  deletadoEm   DateTime
+  deletadoEm   DateTime?
 }
