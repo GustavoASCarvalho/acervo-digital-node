@@ -1,4 +1,5 @@
 import { Tag } from '../../../domain/entities/tag';
+import { TagRepositorio } from '../../repositories/TagRepositorio';
 import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 
 export type CriandoTagRequisicao = {
@@ -7,7 +8,10 @@ export type CriandoTagRequisicao = {
 };
 
 export class CriandoTag {
-	constructor(private usuarioRepositorio: UsuarioRepositorio) {}
+	constructor(
+		private usuarioRepositorio: UsuarioRepositorio,
+		private tagRepositorio: TagRepositorio,
+	) {}
 
 	async executar({ nome, idDoUsuario }: CriandoTagRequisicao) {
 		const usuario = await this.usuarioRepositorio.findById(idDoUsuario);
@@ -20,6 +24,8 @@ export class CriandoTag {
 			idDoUsuario,
 			nome,
 		});
+
+		await this.tagRepositorio.create(tag);
 
 		return tag;
 	}

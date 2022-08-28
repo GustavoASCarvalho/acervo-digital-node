@@ -1,4 +1,5 @@
 import { Postagem } from '../../../domain/entities/postagem';
+import { PostagemRepositorio } from '../../repositories/PostagemRepositorio';
 import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 
 export type CriandoPostagemRequisicao = {
@@ -9,7 +10,10 @@ export type CriandoPostagemRequisicao = {
 };
 
 export class CriandoPostagem {
-	constructor(private usuarioRepositorio: UsuarioRepositorio) {}
+	constructor(
+		private usuarioRepositorio: UsuarioRepositorio,
+		private postagemRepositorio: PostagemRepositorio,
+	) {}
 
 	async executar({
 		titulo,
@@ -30,6 +34,8 @@ export class CriandoPostagem {
 			titulo,
 			visualizacoes: 0,
 		});
+
+		this.postagemRepositorio.create(postagem);
 
 		return postagem;
 	}

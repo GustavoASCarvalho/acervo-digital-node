@@ -7,6 +7,8 @@ export type CriandoImagemRequisicao = {
 	data: string;
 	endereco: string;
 	idDoUsuario: string;
+	latitude: string;
+	longitude: string;
 };
 
 export class CriandoImagem {
@@ -20,6 +22,8 @@ export class CriandoImagem {
 		data,
 		endereco,
 		idDoUsuario,
+		latitude,
+		longitude,
 	}: CriandoImagemRequisicao) {
 		const usuario = await this.usuarioRepositorio.findById(idDoUsuario);
 
@@ -32,8 +36,8 @@ export class CriandoImagem {
 			data,
 			endereco,
 			idDoUsuario,
-			latitude: '-232',
-			longitude: '-232',
+			latitude,
+			longitude,
 			url: 'http://',
 			visualizacoes: 0,
 		});
