@@ -1,5 +1,5 @@
 import { Tag } from '../../../domain/entities/tag';
-import { ApiError } from '../../../helpers/api-error';
+import { ApiError } from '../../../helpers/types/api-error';
 import { TagRepositorio } from '../../repositories/TagRepositorio';
 import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 
@@ -32,23 +32,14 @@ async function validacaoDaRequisicao(
 	{ nome, idDoUsuario }: CriandoTagRequisicao,
 	usuarioRepositorio: UsuarioRepositorio,
 ) {
-	let mensagensDeErro: string[] = [];
-
 	if (!nome) {
-		mensagensDeErro.push(`O campo 'nome' não está presente na requisição.`);
+		throw new ApiError(`Campo 'nome' na requisição.`, 400);
 	}
-
 	if (!idDoUsuario) {
-		mensagensDeErro.push(
-			`O campo 'idDoUsuario' não está presente na requisição.`,
-		);
+		throw new ApiError(`Campo 'idDoUsuario' na requisição.`, 400);
 	}
-	if (mensagensDeErro.length > 0) {
-		throw new ApiError(mensagensDeErro, 400);
-	}
-
 	const usuario = await usuarioRepositorio.findById(idDoUsuario);
 	if (!usuario) {
-		throw new ApiError([`Usuario '${idDoUsuario}' não encontrado.`], 404);
+		throw new ApiError(`Usuario '${idDoUsuario}' não encontrado.`, 404);
 	}
 }

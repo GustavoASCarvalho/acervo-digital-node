@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { ApiError } from '../helpers/api-error';
+import { ApiError } from '../helpers/types/api-error';
+import { ApiResponse } from '../helpers/types/api-response';
 
 export class ErrorMiddleware {
 	async middleware(
@@ -9,12 +10,14 @@ export class ErrorMiddleware {
 		_next: NextFunction,
 	) {
 		if (error instanceof ApiError) {
-			return res
-				.status(error.statusCode)
-				.json({ messages: error.messages, code: error.statusCode });
+			return res.status(error.statusCode).json({
+				message: error.message,
+				statusCode: error.statusCode,
+			} as ApiResponse);
 		}
-		return res
-			.status(500)
-			.json({ messages: ['Erro interno do servidor'], status: 500 });
+		return res.status(500).json({
+			message: 'Erro interno do servidor',
+			statusCode: 500,
+		} as ApiResponse);
 	}
 }

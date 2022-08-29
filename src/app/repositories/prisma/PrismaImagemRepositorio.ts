@@ -1,6 +1,7 @@
 import { prisma } from '../../../prisma';
 import { Imagem } from '../../../domain/entities/imagem';
 import { ImagemRepositorio } from '../ImagemRepositorio';
+import { ApiError } from '../../../helpers/types/api-error';
 
 export class PrismaImagemRepositorio implements ImagemRepositorio {
 	async findById(id: string): Promise<Imagem | null> {
@@ -28,6 +29,10 @@ export class PrismaImagemRepositorio implements ImagemRepositorio {
 		);
 	}
 	async create(data: Imagem): Promise<Imagem> {
+		if (await this.findById(data.id)) {
+			throw new ApiError(`Imagem ${data.id} já existe.`, 400);
+		}
+
 		const imagem = await prisma.imagem.create({
 			data: {
 				atualizadoEm: data.atualizadoEm,

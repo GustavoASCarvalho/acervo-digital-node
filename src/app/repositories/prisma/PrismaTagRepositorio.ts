@@ -1,6 +1,7 @@
 import { prisma } from '../../../prisma';
 import { Tag } from '../../../domain/entities/tag';
 import { TagRepositorio } from '../TagRepositorio';
+import { ApiError } from '../../../helpers/types/api-error';
 
 export class PrismaTagRepositorio implements TagRepositorio {
 	async findById(id: string): Promise<Tag | null> {
@@ -22,6 +23,9 @@ export class PrismaTagRepositorio implements TagRepositorio {
 		);
 	}
 	async create(data: Tag): Promise<Tag> {
+		if (await this.findById(data.id)) {
+			throw new ApiError(`Tag ${data.id} já existe.`, 400);
+		}
 		const tag = await prisma.tag.create({
 			data: {
 				idDoUsuario: data.props.idDoUsuario,

@@ -5,6 +5,7 @@ import {
 } from '../app/usecases/imagem/criando-imagem';
 import { PrismaUsuarioRepositorio } from '../app/repositories/prisma/PrismaUsuarioRepositorio';
 import { PrismaImagemRepositorio } from '../app/repositories/prisma/PrismaImagemRepositorio';
+import { ApiResponse } from '../helpers/types/api-response';
 
 export class ImagemControlador {
 	async create(req: Request, res: Response): Promise<Response> {
@@ -16,8 +17,14 @@ export class ImagemControlador {
 			imagemRepositorio,
 		);
 
-		await criandoImagem.executar(data);
+		const imagem = await criandoImagem.executar(data);
 
-		return res.status(201).json({ message: 'sucesso' });
+		return res.status(201).json({
+			message: `Imagem '${data.nome}' criada com sucesso.`,
+			statusCode: 201,
+			data: {
+				id: imagem.id,
+			},
+		} as ApiResponse);
 	}
 }

@@ -1,6 +1,7 @@
 import { prisma } from '../../../prisma';
 import { Postagem } from '../../../domain/entities/postagem';
 import { PostagemRepositorio } from '../PostagemRepositorio';
+import { ApiError } from '../../../helpers/types/api-error';
 
 export class PrismaPostagemRepositorio implements PostagemRepositorio {
 	async findById(id: string): Promise<Postagem | null> {
@@ -25,6 +26,9 @@ export class PrismaPostagemRepositorio implements PostagemRepositorio {
 		);
 	}
 	async create(data: Postagem): Promise<Postagem> {
+		if (await this.findById(data.id)) {
+			throw new ApiError(`Postagem ${data.id} já existe.`, 400);
+		}
 		const postagem = await prisma.postagem.create({
 			data: {
 				descricao: data.props.descricao,

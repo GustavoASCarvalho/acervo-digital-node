@@ -1,5 +1,5 @@
 import { CargosDoUsuarioEnum, Usuario } from '../../../domain/entities/usuario';
-import { ApiError } from '../../../helpers/api-error';
+import { ApiError } from '../../../helpers/types/api-error';
 import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 
 export type CriandoUsuarioRequisicao = {
@@ -39,23 +39,29 @@ async function validacaoDaRequisicao({
 	senha,
 	imagemDePerfil,
 }: CriandoUsuarioRequisicao) {
-	let mensagensDeErro: string[] = [];
-
 	if (!nome) {
-		mensagensDeErro.push(`O campo 'nome' não está presente na requisição.`);
+		throw new ApiError(`Campo 'nome' ausente na requisição.`, 400);
 	}
 	if (!email) {
-		mensagensDeErro.push(`O campo 'email' não está presente na requisição.`);
+		throw new ApiError(`Campo 'email' ausente na requisição.`, 400);
+	} else if (
+		!(email.includes('@') && email.includes('.')) ||
+		email.startsWith('@') ||
+		email.startsWith('.')
+	) {
+		throw new ApiError(`Campo 'email' invalido`, 400);
 	}
 	if (!senha) {
-		mensagensDeErro.push(`O campo 'senha' não está presente na requisição.`);
+		throw new ApiError(`Campo 'senha' ausente na requisição.`, 400);
 	}
 	if (!imagemDePerfil) {
-		mensagensDeErro.push(
-			`O campo 'imagemDePerfil' não está presente na requisição.`,
-		);
-	}
-	if (mensagensDeErro.length > 0) {
-		throw new ApiError(mensagensDeErro, 400);
+		throw new ApiError(`Campo 'imagemDePerfil' ausente na requisição.`, 400);
+	} else if (
+		!(
+			imagemDePerfil.startsWith('http://') ||
+			imagemDePerfil.startsWith('https://')
+		)
+	) {
+		throw new ApiError(`Campo 'imagemDePerfil' invalido`, 400);
 	}
 }

@@ -1,5 +1,5 @@
 import { Imagem } from '../../../domain/entities/imagem';
-import { ApiError } from '../../../helpers/api-error';
+import { ApiError } from '../../../helpers/types/api-error';
 import { ImagemRepositorio } from '../../repositories/ImagemRepositorio';
 import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 
@@ -59,36 +59,26 @@ async function validacaoDaRequisicao(
 	}: CriandoImagemRequisicao,
 	usuarioRepositorio: UsuarioRepositorio,
 ) {
-	let mensagensDeErro: string[] = [];
-
 	if (!nome) {
-		mensagensDeErro.push(`O campo 'nome' não está presente na requisição.`);
+		throw new ApiError(`Campo 'nome' ausente na requisição.`, 400);
 	}
 	if (!data) {
-		mensagensDeErro.push(`O campo 'data' não está presente na requisição.`);
+		throw new ApiError(`Campo 'data' ausente na requisição.`, 400);
 	}
 	if (!endereco) {
-		mensagensDeErro.push(`O campo 'endereco' não está presente na requisição.`);
+		throw new ApiError(`Campo 'endereco' ausente na requisição.`, 400);
 	}
 	if (!idDoUsuario) {
-		mensagensDeErro.push(
-			`O campo 'idDoUsuario' não está presente na requisição.`,
-		);
+		throw new ApiError(`Campo 'idDoUsuario' ausente na requisição.`, 400);
 	}
 	if (!latitude) {
-		mensagensDeErro.push(`O campo 'latitude' não está presente na requisição.`);
+		throw new ApiError(`Campo 'latitude' ausente na requisição.`, 400);
 	}
 	if (!longitude) {
-		mensagensDeErro.push(
-			`O campo 'longitude' não está presente na requisição.`,
-		);
+		throw new ApiError(`Campo 'longitude' ausente na requisição.`, 400);
 	}
-	if (mensagensDeErro.length > 0) {
-		throw new ApiError(mensagensDeErro, 400);
-	}
-
 	const usuario = await usuarioRepositorio.findById(idDoUsuario);
 	if (!usuario) {
-		throw new ApiError([`Usuario '${idDoUsuario}' não encontrado.`], 404);
+		throw new ApiError(`Usuario '${idDoUsuario}' não encontrado.`, 404);
 	}
 }

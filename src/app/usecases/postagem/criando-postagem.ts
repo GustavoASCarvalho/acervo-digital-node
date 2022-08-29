@@ -1,5 +1,5 @@
 import { Postagem } from '../../../domain/entities/postagem';
-import { ApiError } from '../../../helpers/api-error';
+import { ApiError } from '../../../helpers/types/api-error';
 import { PostagemRepositorio } from '../../repositories/PostagemRepositorio';
 import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 
@@ -45,33 +45,22 @@ async function validacaoDaRequisicao(
 	{ titulo, descricao, texto, idDoUsuario }: CriandoPostagemRequisicao,
 	usuarioRepositorio: UsuarioRepositorio,
 ) {
-	let mensagensDeErro: string[] = [];
-
 	if (!titulo) {
-		mensagensDeErro.push(`O campo 'titulo' não está presente na requisição.`);
+		throw new ApiError(`Campo 'titulo' na requisição.`, 400);
 	}
 
 	if (!descricao) {
-		mensagensDeErro.push(
-			`O campo 'descricao' não está presente na requisição.`,
-		);
+		throw new ApiError(`Campo 'descricao' na requisição.`, 400);
 	}
 
 	if (!texto) {
-		mensagensDeErro.push(`O campo 'texto' não está presente na requisição.`);
+		throw new ApiError(`Campo 'texto' na requisição.`, 400);
 	}
-
 	if (!idDoUsuario) {
-		mensagensDeErro.push(
-			`O campo 'idDoUsuario' não está presente na requisição.`,
-		);
+		throw new ApiError(`Campo 'idDoUsuario' na requisição.`, 400);
 	}
-	if (mensagensDeErro.length > 0) {
-		throw new ApiError(mensagensDeErro, 400);
-	}
-
 	const usuario = await usuarioRepositorio.findById(idDoUsuario);
 	if (!usuario) {
-		throw new ApiError([`Usuario '${idDoUsuario}' não encontrado.`], 404);
+		throw new ApiError(`Usuario '${idDoUsuario}' não encontrado.`, 404);
 	}
 }
