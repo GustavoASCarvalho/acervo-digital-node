@@ -1,6 +1,7 @@
 import { CargosDoUsuarioEnum, Usuario } from '../../../domain/entities/usuario';
 import { ApiError } from '../../../helpers/types/api-error';
 import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
+import bcrypt from 'bcrypt';
 
 export type CriandoUsuarioRequisicao = {
 	nome: string;
@@ -19,6 +20,9 @@ export class CriandoUsuario {
 		imagemDePerfil,
 	}: CriandoUsuarioRequisicao) {
 		await validacaoDaRequisicao({ nome, email, senha, imagemDePerfil });
+
+		senha = await bcrypt.hash(senha, 10);
+
 		const usuario = Usuario.criar({
 			nome,
 			cargo: CargosDoUsuarioEnum.USUARIO,
