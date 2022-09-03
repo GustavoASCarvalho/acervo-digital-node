@@ -11,21 +11,21 @@ export type PropriedadesDoComentario = {
 export class Comentario extends Entidade<PropriedadesDoComentario> {
 	private constructor(
 		props: PropriedadesDoComentario,
+		criadoEm: Date,
+		atualizadoEm: Date,
 		id?: string,
-		criadoEm?: Date,
-		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
-		super(props, id, criadoEm, atualizadoEm, deletadoEm);
+		super(props, criadoEm, atualizadoEm, id, deletadoEm);
 	}
 
 	static criar(
 		props: PropriedadesDoComentario,
+		criadoEm: Date,
+		atualizadoEm: Date,
 		id?: string,
-		criadoEm?: Date,
-		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
-		return new Comentario(props, id, criadoEm, atualizadoEm, deletadoEm);
+		return new Comentario(props, criadoEm, atualizadoEm, id, deletadoEm);
 	}
 }

@@ -59,9 +59,9 @@ export class PrismaUsuarioRepositorio implements UsuarioRepositorio {
 				imagemDePerfil: usuario.imagem_de_perfil,
 				cargo: usuario.cargo as TipoDeCargo,
 			},
-			usuario.id,
 			usuario.criado_em,
 			usuario.atualizado_em,
+			usuario.id,
 			usuario.deletado_em ?? undefined,
 		);
 	}

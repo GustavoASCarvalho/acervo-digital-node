@@ -63,9 +63,9 @@ export class PrismaImagemRepositorio implements ImagemRepositorio {
 				longitude: imagem.longitude,
 				idDoUsuario: imagem.id_do_usuario,
 			},
-			imagem.id,
 			imagem.criado_em,
 			imagem.atualizado_em,
+			imagem.id,
 			imagem.deletado_em ?? undefined,
 		);
 	}

@@ -17,21 +17,21 @@ export type PropriedadesDoUsuario = {
 export class Usuario extends Entidade<PropriedadesDoUsuario> {
 	private constructor(
 		props: PropriedadesDoUsuario,
+		criadoEm: Date,
+		atualizadoEm: Date,
 		id?: string,
-		criadoEm?: Date,
-		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
-		super(props, id, criadoEm, atualizadoEm, deletadoEm);
+		super(props, criadoEm, atualizadoEm, id, deletadoEm);
 	}
 
 	static criar(
 		props: PropriedadesDoUsuario,
+		criadoEm: Date,
+		atualizadoEm: Date,
 		id?: string,
-		criadoEm?: Date,
-		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
-		return new Usuario(props, id, criadoEm, atualizadoEm, deletadoEm);
+		return new Usuario(props, criadoEm, atualizadoEm, id, deletadoEm);
 	}
 }

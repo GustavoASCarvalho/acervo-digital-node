@@ -6,6 +6,8 @@ import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 export type CriandoTagRequisicao = {
 	nome: string;
 	idDoUsuario: string;
+	criadoEm: Date;
+	atualizadoEm: Date;
 };
 
 export class CriandoTag {
@@ -14,13 +16,25 @@ export class CriandoTag {
 		private tagRepositorio: TagRepositorio,
 	) {}
 
-	async executar({ nome, idDoUsuario }: CriandoTagRequisicao) {
-		await validacaoDaRequisicao({ nome, idDoUsuario }, this.usuarioRepositorio);
+	async executar({
+		nome,
+		idDoUsuario,
+		criadoEm,
+		atualizadoEm,
+	}: CriandoTagRequisicao) {
+		await validacaoDaRequisicao(
+			{ nome, idDoUsuario, criadoEm, atualizadoEm },
+			this.usuarioRepositorio,
+		);
 
-		const tag = Tag.criar({
-			idDoUsuario,
-			nome,
-		});
+		const tag = Tag.criar(
+			{
+				idDoUsuario,
+				nome,
+			},
+			criadoEm,
+			atualizadoEm,
+		);
 
 		await this.tagRepositorio.create(tag);
 
@@ -29,7 +43,7 @@ export class CriandoTag {
 }
 
 async function validacaoDaRequisicao(
-	{ nome, idDoUsuario }: CriandoTagRequisicao,
+	{ nome, idDoUsuario, criadoEm, atualizadoEm }: CriandoTagRequisicao,
 	usuarioRepositorio: UsuarioRepositorio,
 ) {
 	if (!nome) {
@@ -41,5 +55,11 @@ async function validacaoDaRequisicao(
 	const usuario = await usuarioRepositorio.findById(idDoUsuario);
 	if (!usuario) {
 		throw new ApiError(`Usuario '${idDoUsuario}' não encontrado.`, 404);
+	}
+	if (!criadoEm) {
+		throw new ApiError(`Campo 'criadoEm' ausente na requisição.`, 400);
+	}
+	if (!atualizadoEm) {
+		throw new ApiError(`Campo 'atualizadoEm' ausente na requisição.`, 400);
 	}
 }

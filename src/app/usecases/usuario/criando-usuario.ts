@@ -8,6 +8,8 @@ export type CriandoUsuarioRequisicao = {
 	email: string;
 	senha: string;
 	imagemDePerfil: string;
+	criadoEm: Date;
+	atualizadoEm: Date;
 };
 
 export class CriandoUsuario {
@@ -18,18 +20,31 @@ export class CriandoUsuario {
 		email,
 		senha,
 		imagemDePerfil,
+		criadoEm,
+		atualizadoEm,
 	}: CriandoUsuarioRequisicao) {
-		await validacaoDaRequisicao({ nome, email, senha, imagemDePerfil });
+		await validacaoDaRequisicao({
+			nome,
+			email,
+			senha,
+			imagemDePerfil,
+			criadoEm,
+			atualizadoEm,
+		});
 
 		senha = await bcrypt.hash(senha, 10);
 
-		const usuario = Usuario.criar({
-			nome,
-			cargo: TipoDeCargo.USUARIO,
-			email,
-			imagemDePerfil,
-			senha,
-		});
+		const usuario = Usuario.criar(
+			{
+				nome,
+				cargo: TipoDeCargo.USUARIO,
+				email,
+				imagemDePerfil,
+				senha,
+			},
+			criadoEm,
+			atualizadoEm,
+		);
 
 		await this.usuarioRepositorio.create(usuario);
 
@@ -42,6 +57,8 @@ async function validacaoDaRequisicao({
 	email,
 	senha,
 	imagemDePerfil,
+	criadoEm,
+	atualizadoEm,
 }: CriandoUsuarioRequisicao) {
 	if (!nome) {
 		throw new ApiError(`Campo 'nome' ausente na requisição.`, 400);
@@ -67,5 +84,11 @@ async function validacaoDaRequisicao({
 		)
 	) {
 		throw new ApiError(`Campo 'imagemDePerfil' invalido`, 400);
+	}
+	if (!criadoEm) {
+		throw new ApiError(`Campo 'criadoEm' ausente na requisição.`, 400);
+	}
+	if (!atualizadoEm) {
+		throw new ApiError(`Campo 'atualizadoEm' ausente na requisição.`, 400);
 	}
 }

@@ -38,9 +38,9 @@ export class PrismaTagRepositorio implements TagRepositorio {
 				idDoUsuario: tag.id_do_usuario,
 				nome: tag.nome,
 			},
-			tag.id,
 			tag.criado_em,
 			tag.atualizado_em,
+			tag.id,
 			tag.deletado_em ?? undefined,
 		);
 	}

@@ -9,19 +9,13 @@ import { ApiResponse } from '../helpers/types/api-response';
 
 export class UsuarioControlador {
 	async create(req: Request, res: Response): Promise<Response> {
-		const { nome, email, senha, imagemDePerfil }: CriandoUsuarioRequisicao =
-			req.body;
+		const data: CriandoUsuarioRequisicao = req.body;
 		const usuarioRepositorio = new PrismaUsuarioRepositorio();
 		const criandoUsuario = new CriandoUsuario(usuarioRepositorio);
 
-		const usuario = await criandoUsuario.executar({
-			nome,
-			email,
-			senha,
-			imagemDePerfil,
-		});
+		const usuario = await criandoUsuario.executar(data);
 		return res.status(201).json({
-			message: `Usuario '${nome}' criado com sucesso`,
+			message: `Usuario '${data.nome}' criado com sucesso`,
 			statusCode: 201,
 			data: {
 				id: usuario.id,

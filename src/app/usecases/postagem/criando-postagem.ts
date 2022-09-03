@@ -8,6 +8,8 @@ export type CriandoPostagemRequisicao = {
 	descricao: string;
 	texto: string;
 	idDoUsuario: string;
+	criadoEm: Date;
+	atualizadoEm: Date;
 };
 
 export class CriandoPostagem {
@@ -21,19 +23,25 @@ export class CriandoPostagem {
 		descricao,
 		texto,
 		idDoUsuario,
+		criadoEm,
+		atualizadoEm,
 	}: CriandoPostagemRequisicao) {
 		await validacaoDaRequisicao(
-			{ titulo, descricao, texto, idDoUsuario },
+			{ titulo, descricao, texto, idDoUsuario, criadoEm, atualizadoEm },
 			this.usuarioRepositorio,
 		);
 
-		const postagem = Postagem.criar({
-			descricao,
-			idDoUsuario,
-			texto,
-			titulo,
-			visualizacoes: 0,
-		});
+		const postagem = Postagem.criar(
+			{
+				descricao,
+				idDoUsuario,
+				texto,
+				titulo,
+				visualizacoes: 0,
+			},
+			criadoEm,
+			atualizadoEm,
+		);
 
 		this.postagemRepositorio.create(postagem);
 
@@ -42,7 +50,14 @@ export class CriandoPostagem {
 }
 
 async function validacaoDaRequisicao(
-	{ titulo, descricao, texto, idDoUsuario }: CriandoPostagemRequisicao,
+	{
+		titulo,
+		descricao,
+		texto,
+		idDoUsuario,
+		criadoEm,
+		atualizadoEm,
+	}: CriandoPostagemRequisicao,
 	usuarioRepositorio: UsuarioRepositorio,
 ) {
 	if (!titulo) {
@@ -62,5 +77,11 @@ async function validacaoDaRequisicao(
 	const usuario = await usuarioRepositorio.findById(idDoUsuario);
 	if (!usuario) {
 		throw new ApiError(`Usuario '${idDoUsuario}' não encontrado.`, 404);
+	}
+	if (!criadoEm) {
+		throw new ApiError(`Campo 'criadoEm' ausente na requisição.`, 400);
+	}
+	if (!atualizadoEm) {
+		throw new ApiError(`Campo 'atualizadoEm' ausente na requisição.`, 400);
 	}
 }

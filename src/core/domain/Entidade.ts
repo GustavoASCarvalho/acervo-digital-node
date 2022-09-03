@@ -24,15 +24,15 @@ export abstract class Entidade<T> {
 
 	constructor(
 		props: T,
+		criadoEm: Date,
+		atualizadoEm: Date,
 		id?: string,
-		criadoEm?: Date,
-		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
 		this.props = props;
 		this._id = id ?? crypto.randomUUID();
-		this._criadoEm = criadoEm ?? new Date();
-		this._atualizadoEm = atualizadoEm ?? new Date();
+		this._criadoEm = criadoEm;
+		this._atualizadoEm = atualizadoEm;
 		this._deletadoEm = deletadoEm ?? undefined;
 	}
 }

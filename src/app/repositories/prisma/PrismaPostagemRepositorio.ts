@@ -44,9 +44,9 @@ export class PrismaPostagemRepositorio implements PostagemRepositorio {
 				titulo: postagem.titulo,
 				visualizacoes: postagem.visualizacoes,
 			},
-			postagem.id,
 			postagem.criado_em,
 			postagem.atualizado_em,
+			postagem.id,
 			postagem.deletado_em ?? undefined,
 		);
 	}

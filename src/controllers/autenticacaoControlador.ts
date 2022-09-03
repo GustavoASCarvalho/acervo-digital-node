@@ -8,16 +8,13 @@ import { PrismaAutenticacaoRepositorio } from '../app/repositories/prisma/Prisma
 
 export class AutenticacaoControlador {
 	async autenticar(req: Request, res: Response): Promise<Response> {
-		const { email, senha }: AutenticandoUsuarioRequisicao = req.body;
+		const data: AutenticandoUsuarioRequisicao = req.body;
 		const autenticacaoRepositorio = new PrismaAutenticacaoRepositorio();
 		const autenticandoUsuario = new AutenticandoUsuario(
 			autenticacaoRepositorio,
 		);
 
-		const token = await autenticandoUsuario.executar({
-			email,
-			senha,
-		});
+		const token = await autenticandoUsuario.executar(data);
 		console.log(token);
 		return res.status(200).json({
 			message: `Usuario autenticado com sucesso`,

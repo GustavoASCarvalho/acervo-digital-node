@@ -7,9 +7,11 @@ export type CriandoImagemRequisicao = {
 	nome: string;
 	data: Date;
 	endereco: string;
-	idDoUsuario: string;
 	latitude: string;
 	longitude: string;
+	idDoUsuario: string;
+	criadoEm: Date;
+	atualizadoEm: Date;
 };
 
 export class CriandoImagem {
@@ -25,22 +27,37 @@ export class CriandoImagem {
 		idDoUsuario,
 		latitude,
 		longitude,
+		criadoEm,
+		atualizadoEm,
 	}: CriandoImagemRequisicao) {
 		await validacaoDaRequisicao(
-			{ nome, data, endereco, idDoUsuario, latitude, longitude },
+			{
+				nome,
+				data,
+				endereco,
+				idDoUsuario,
+				latitude,
+				longitude,
+				criadoEm,
+				atualizadoEm,
+			},
 			this.usuarioRepositorio,
 		);
 
-		const imagem = Imagem.criar({
-			nome,
-			data,
-			endereco,
-			idDoUsuario,
-			latitude,
-			longitude,
-			url: 'http://',
-			visualizacoes: 0,
-		});
+		const imagem = Imagem.criar(
+			{
+				nome,
+				data,
+				endereco,
+				idDoUsuario,
+				latitude,
+				longitude,
+				url: 'http://',
+				visualizacoes: 0,
+			},
+			criadoEm,
+			atualizadoEm,
+		);
 
 		await this.imagemRepositorio.create(imagem);
 
@@ -56,11 +73,15 @@ async function validacaoDaRequisicao(
 		idDoUsuario,
 		latitude,
 		longitude,
+		criadoEm,
+		atualizadoEm,
 	}: CriandoImagemRequisicao,
 	usuarioRepositorio: UsuarioRepositorio,
 ) {
 	if (!nome) {
 		throw new ApiError(`Campo 'nome' ausente na requisição.`, 400);
+	} else if (nome.length >= 255) {
+		throw new ApiError(`Campo 'nome' invalido.`, 400);
 	}
 	if (!data) {
 		throw new ApiError(`Campo 'data' ausente na requisição.`, 400);
@@ -80,5 +101,11 @@ async function validacaoDaRequisicao(
 	const usuario = await usuarioRepositorio.findById(idDoUsuario);
 	if (!usuario) {
 		throw new ApiError(`Usuario '${idDoUsuario}' não encontrado.`, 404);
+	}
+	if (!criadoEm) {
+		throw new ApiError(`Campo 'criadoEm' ausente na requisição.`, 400);
+	}
+	if (!atualizadoEm) {
+		throw new ApiError(`Campo 'atualizadoEm' ausente na requisição.`, 400);
 	}
 }

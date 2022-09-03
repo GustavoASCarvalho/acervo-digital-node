@@ -14,21 +14,21 @@ export type PropriedadesDoVoto = {
 export class Voto extends Entidade<PropriedadesDoVoto> {
 	private constructor(
 		props: PropriedadesDoVoto,
+		criadoEm: Date,
+		atualizadoEm: Date,
 		id?: string,
-		criadoEm?: Date,
-		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
-		super(props, id, criadoEm, atualizadoEm, deletadoEm);
+		super(props, criadoEm, atualizadoEm, id, deletadoEm);
 	}
 
 	static criar(
 		props: PropriedadesDoVoto,
+		criadoEm: Date,
+		atualizadoEm: Date,
 		id?: string,
-		criadoEm?: Date,
-		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
-		return new Voto(props, id, criadoEm, atualizadoEm, deletadoEm);
+		return new Voto(props, criadoEm, atualizadoEm, id, deletadoEm);
 	}
 }

@@ -14,21 +14,21 @@ export type PropriedadesDaImagem = {
 export class Imagem extends Entidade<PropriedadesDaImagem> {
 	private constructor(
 		props: PropriedadesDaImagem,
+		criadoEm: Date,
+		atualizadoEm: Date,
 		id?: string,
-		criadoEm?: Date,
-		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
-		super(props, id, criadoEm, atualizadoEm, deletadoEm);
+		super(props, criadoEm, atualizadoEm, id, deletadoEm);
 	}
 
 	static criar(
 		props: PropriedadesDaImagem,
+		criadoEm: Date,
+		atualizadoEm: Date,
 		id?: string,
-		criadoEm?: Date,
-		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
-		return new Imagem(props, id, criadoEm, atualizadoEm, deletadoEm);
+		return new Imagem(props, criadoEm, atualizadoEm, id, deletadoEm);
 	}
 }

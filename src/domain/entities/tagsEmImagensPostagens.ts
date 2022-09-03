@@ -10,26 +10,26 @@ export type PropriedadesDaTagEmImagensPostagens = {
 export class TagEmImagensPostagens extends Entidade<PropriedadesDaTagEmImagensPostagens> {
 	private constructor(
 		props: PropriedadesDaTagEmImagensPostagens,
+		criadoEm: Date,
+		atualizadoEm: Date,
 		id?: string,
-		criadoEm?: Date,
-		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
-		super(props, id, criadoEm, atualizadoEm, deletadoEm);
+		super(props, criadoEm, atualizadoEm, id, deletadoEm);
 	}
 
 	static criar(
 		props: PropriedadesDaTagEmImagensPostagens,
+		criadoEm: Date,
+		atualizadoEm: Date,
 		id?: string,
-		criadoEm?: Date,
-		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
 		return new TagEmImagensPostagens(
 			props,
-			id,
 			criadoEm,
 			atualizadoEm,
+			id,
 			deletadoEm,
 		);
 	}

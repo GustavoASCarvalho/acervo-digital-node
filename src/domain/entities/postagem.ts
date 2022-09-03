@@ -11,21 +11,21 @@ export type PropriedadesDaPostagem = {
 export class Postagem extends Entidade<PropriedadesDaPostagem> {
 	private constructor(
 		props: PropriedadesDaPostagem,
+		criadoEm: Date,
+		atualizadoEm: Date,
 		id?: string,
-		criadoEm?: Date,
-		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
-		super(props, id, criadoEm, atualizadoEm, deletadoEm);
+		super(props, criadoEm, atualizadoEm, id, deletadoEm);
 	}
 
 	static criar(
 		props: PropriedadesDaPostagem,
+		criadoEm: Date,
+		atualizadoEm: Date,
 		id?: string,
-		criadoEm?: Date,
-		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
-		return new Postagem(props, id, criadoEm, atualizadoEm, deletadoEm);
+		return new Postagem(props, criadoEm, atualizadoEm, id, deletadoEm);
 	}
 }
