@@ -1,5 +1,4 @@
-import { Imagem } from '../../../domain/entities/imagem';
-import { CargosDoUsuarioEnum } from '../../../domain/entities/usuario';
+import { TipoDeCargo } from '../../../domain/entities/usuario';
 import { ApiError } from '../../../helpers/types/api-error';
 import { ImagemRepositorio } from '../../repositories/ImagemRepositorio';
 import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
@@ -58,7 +57,7 @@ async function validacaoDaRequisicao(
 	}
 	if (
 		imagem.props.idDoUsuario !== idDoUsuario ||
-		usuario.props.cargo === CargosDoUsuarioEnum.USUARIO
+		usuario.props.cargo === TipoDeCargo.USUARIO
 	) {
 		throw new ApiError(`Não authorizado`, 400);
 	}

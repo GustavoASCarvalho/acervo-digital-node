@@ -1,9 +1,9 @@
 import { Entidade } from '../../core/domain/Entidade';
 
-export enum CargosDoUsuarioEnum {
-	MODERADOR = 'Moderador',
-	ADIMINISTRADOR = 'Adiministrador',
-	USUARIO = 'Usuario',
+export enum TipoDeCargo {
+	MODERADOR = 'MODERADOR',
+	ADIMINISTRADOR = 'ADIMINISTRADOR',
+	USUARIO = 'USUARIO',
 }
 
 export type PropriedadesDoUsuario = {
@@ -11,7 +11,7 @@ export type PropriedadesDoUsuario = {
 	email: string;
 	senha: string;
 	imagemDePerfil: string;
-	cargo: CargosDoUsuarioEnum;
+	cargo: TipoDeCargo;
 };
 
 export class Usuario extends Entidade<PropriedadesDoUsuario> {

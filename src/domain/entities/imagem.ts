@@ -1,10 +1,9 @@
-import { Prisma } from '@prisma/client';
 import { Entidade } from '../../core/domain/Entidade';
 
 export type PropriedadesDaImagem = {
 	url: string;
 	nome: string;
-	data: string;
+	data: Date;
 	visualizacoes: number;
 	endereco: string;
 	latitude: string;
@@ -24,36 +23,12 @@ export class Imagem extends Entidade<PropriedadesDaImagem> {
 	}
 
 	static criar(
-		{
-			url,
-			nome,
-			data,
-			visualizacoes,
-			endereco,
-			latitude,
-			longitude,
-			idDoUsuario,
-		}: PropriedadesDaImagem,
+		props: PropriedadesDaImagem,
 		id?: string,
 		criadoEm?: Date,
 		atualizadoEm?: Date,
 		deletadoEm?: Date,
 	) {
-		return new Imagem(
-			{
-				url,
-				nome,
-				data,
-				visualizacoes,
-				endereco,
-				latitude,
-				longitude,
-				idDoUsuario,
-			},
-			id,
-			criadoEm,
-			atualizadoEm,
-			deletadoEm,
-		);
+		return new Imagem(props, id, criadoEm, atualizadoEm, deletadoEm);
 	}
 }

@@ -1,12 +1,13 @@
 import { prisma } from '../../../prisma';
 import { AutenticacaoRepositorio } from '../AutenticacaoRepositorio';
-import { CargosDoUsuarioEnum, Usuario } from '../../../domain/entities/usuario';
+import { TipoDeCargo, Usuario } from '../../../domain/entities/usuario';
 import { ApiError } from '../../../helpers/types/api-error';
 import bcrypt from 'bcrypt';
+import { usuarios } from '@prisma/client';
 
 export class PrismaAutenticacaoRepositorio implements AutenticacaoRepositorio {
 	async autenticar(email: string, senha: string): Promise<Usuario> {
-		const usuario = await prisma.usuario.findFirst({
+		const usuario = await prisma.usuarios.findFirst({
 			where: { email: email },
 		});
 
@@ -20,18 +21,22 @@ export class PrismaAutenticacaoRepositorio implements AutenticacaoRepositorio {
 			throw new ApiError('Email ou senha inválidos.', 401);
 		}
 
+		return this.formatarUsuario(usuario);
+	}
+
+	private formatarUsuario(usuario: usuarios): Usuario {
 		return Usuario.criar(
 			{
 				nome: usuario.nome,
 				email: usuario.email,
 				senha: usuario.senha,
-				imagemDePerfil: usuario.imagemDePerfil,
-				cargo: usuario.cargo as CargosDoUsuarioEnum,
+				imagemDePerfil: usuario.imagem_de_perfil,
+				cargo: usuario.cargo as TipoDeCargo,
 			},
 			usuario.id,
-			usuario.criadoEm,
-			usuario.atualizadoEm,
-			usuario.deletadoEm ?? undefined,
+			usuario.criado_em,
+			usuario.atualizado_em,
+			usuario.deletado_em ?? undefined,
 		);
 	}
 }

@@ -1,49 +1,28 @@
 import { prisma } from '../../../prisma';
-import { CargosDoUsuarioEnum, Usuario } from '../../../domain/entities/usuario';
+import { TipoDeCargo, Usuario } from '../../../domain/entities/usuario';
 import { UsuarioRepositorio } from '../UsuarioRepositorio';
 import { ApiError } from '../../../helpers/types/api-error';
+import { usuarios } from '@prisma/client';
 
 export class PrismaUsuarioRepositorio implements UsuarioRepositorio {
 	async findById(id: string): Promise<Usuario | null> {
-		const usuario = await prisma.usuario.findFirst({
+		const usuario = await prisma.usuarios.findFirst({
 			where: { id: id },
 		});
 
 		if (!usuario) return null;
 
-		return Usuario.criar(
-			{
-				nome: usuario.nome,
-				email: usuario.email,
-				senha: usuario.senha,
-				imagemDePerfil: usuario.imagemDePerfil,
-				cargo: usuario.cargo as CargosDoUsuarioEnum,
-			},
-			usuario.id,
-			usuario.criadoEm,
-			usuario.atualizadoEm,
-			usuario.deletadoEm ?? undefined,
-		);
+		return this.formatarUsuario(usuario);
 	}
 
 	async findByEmail(email: string): Promise<Usuario | null> {
-		const usuario = await prisma.usuario.findFirst({ where: { email: email } });
+		const usuario = await prisma.usuarios.findFirst({
+			where: { email: email },
+		});
 
 		if (!usuario) return null;
 
-		return Usuario.criar(
-			{
-				nome: usuario.nome,
-				email: usuario.email,
-				senha: usuario.senha,
-				imagemDePerfil: usuario.imagemDePerfil,
-				cargo: usuario.cargo as CargosDoUsuarioEnum,
-			},
-			usuario.id,
-			usuario.criadoEm,
-			usuario.atualizadoEm,
-			usuario.deletadoEm ?? undefined,
-		);
+		return this.formatarUsuario(usuario);
 	}
 
 	async create(data: Usuario): Promise<Usuario> {
@@ -54,32 +33,36 @@ export class PrismaUsuarioRepositorio implements UsuarioRepositorio {
 			throw new ApiError(`Usuario ${data.id} já existe.`, 400);
 		}
 
-		const usuario = await prisma.usuario.create({
+		const usuario = await prisma.usuarios.create({
 			data: {
 				id: data.id,
 				nome: data.props.nome,
 				email: data.props.email,
 				senha: data.props.senha,
-				imagemDePerfil: data.props.imagemDePerfil,
+				imagem_de_perfil: data.props.imagemDePerfil,
 				cargo: data.props.cargo,
-				atualizadoEm: data.atualizadoEm,
-				criadoEm: data.criadoEm,
-				deletadoEm: data.deletadoEm,
+				atualizado_em: data.atualizadoEm,
+				criado_em: data.criadoEm,
+				deletado_em: data.deletadoEm,
 			},
 		});
 
+		return this.formatarUsuario(usuario);
+	}
+
+	private formatarUsuario(usuario: usuarios): Usuario {
 		return Usuario.criar(
 			{
 				nome: usuario.nome,
 				email: usuario.email,
 				senha: usuario.senha,
-				imagemDePerfil: usuario.imagemDePerfil,
-				cargo: usuario.cargo as CargosDoUsuarioEnum,
+				imagemDePerfil: usuario.imagem_de_perfil,
+				cargo: usuario.cargo as TipoDeCargo,
 			},
 			usuario.id,
-			usuario.criadoEm,
-			usuario.atualizadoEm,
-			usuario.deletadoEm ?? undefined,
+			usuario.criado_em,
+			usuario.atualizado_em,
+			usuario.deletado_em ?? undefined,
 		);
 	}
 }

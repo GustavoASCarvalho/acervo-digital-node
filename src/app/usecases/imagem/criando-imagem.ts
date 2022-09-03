@@ -5,7 +5,7 @@ import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 
 export type CriandoImagemRequisicao = {
 	nome: string;
-	data: string;
+	data: Date;
 	endereco: string;
 	idDoUsuario: string;
 	latitude: string;

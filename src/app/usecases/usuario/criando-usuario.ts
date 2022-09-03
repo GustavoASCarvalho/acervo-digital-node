@@ -1,4 +1,4 @@
-import { CargosDoUsuarioEnum, Usuario } from '../../../domain/entities/usuario';
+import { TipoDeCargo, Usuario } from '../../../domain/entities/usuario';
 import { ApiError } from '../../../helpers/types/api-error';
 import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 import bcrypt from 'bcrypt';
@@ -25,7 +25,7 @@ export class CriandoUsuario {
 
 		const usuario = Usuario.criar({
 			nome,
-			cargo: CargosDoUsuarioEnum.USUARIO,
+			cargo: TipoDeCargo.USUARIO,
 			email,
 			imagemDePerfil,
 			senha,

@@ -2,50 +2,46 @@ import { prisma } from '../../../prisma';
 import { Tag } from '../../../domain/entities/tag';
 import { TagRepositorio } from '../TagRepositorio';
 import { ApiError } from '../../../helpers/types/api-error';
+import { tags } from '@prisma/client';
 
 export class PrismaTagRepositorio implements TagRepositorio {
 	async findById(id: string): Promise<Tag | null> {
-		const tag = await prisma.tag.findFirst({
+		const tag = await prisma.tags.findFirst({
 			where: { id: id },
 		});
 
 		if (!tag) return null;
 
-		return Tag.criar(
-			{
-				idDoUsuario: tag.idDoUsuario,
-				nome: tag.nome,
-			},
-			id,
-			tag.criadoEm,
-			tag.atualizadoEm,
-			tag.deletadoEm ?? undefined,
-		);
+		return this.formatarTag(tag);
 	}
 	async create(data: Tag): Promise<Tag> {
 		if (await this.findById(data.id)) {
 			throw new ApiError(`Tag ${data.id} já existe.`, 400);
 		}
-		const tag = await prisma.tag.create({
+		const tag = await prisma.tags.create({
 			data: {
-				idDoUsuario: data.props.idDoUsuario,
+				id_do_usuario: data.props.idDoUsuario,
 				nome: data.props.nome,
 				id: data.id,
-				criadoEm: data.criadoEm,
-				atualizadoEm: data.atualizadoEm,
-				deletadoEm: data.deletadoEm ?? undefined,
+				criado_em: data.criadoEm,
+				atualizado_em: data.atualizadoEm,
+				deletado_em: data.deletadoEm ?? undefined,
 			},
 		});
 
+		return this.formatarTag(tag);
+	}
+
+	private formatarTag(tag: tags): Tag {
 		return Tag.criar(
 			{
-				idDoUsuario: tag.idDoUsuario,
+				idDoUsuario: tag.id_do_usuario,
 				nome: tag.nome,
 			},
 			tag.id,
-			tag.criadoEm,
-			tag.atualizadoEm,
-			tag.deletadoEm ?? undefined,
+			tag.criado_em,
+			tag.atualizado_em,
+			tag.deletado_em ?? undefined,
 		);
 	}
 }

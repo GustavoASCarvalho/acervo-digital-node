@@ -10,55 +10,114 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// datasource db {
-//   provider = "sqlite"
-//   url      = "file:./dev.db"
-// }
-
-model Usuario {
-  id             String    @id
-  nome           String
-  email          String    @unique
-  senha          String
-  imagemDePerfil String
-  cargo          String
-  criadoEm       DateTime
-  atualizadoEm   DateTime
-  deletadoEm     DateTime?
+model usuarios {
+  id               String        @id
+  nome             String
+  email            String        @unique
+  senha            String
+  imagem_de_perfil String
+  cargo            TipoDeCargo
+  criado_em        DateTime
+  atualizado_em    DateTime
+  deletado_em      DateTime?
+  comentarios      comentarios[]
+  votos            votos[]
+  imagens          imagens[]
+  postagens        postagens[]
+  tags             tags[]
 }
 
-model Imagem {
-  id            String    @id
-  url           String
-  nome          String
-  data          String
-  visualizacoes Int
-  endereco      String
-  latitude      String
-  longitude     String
-  idDoUsuario   String
-  criadoEm      DateTime
-  atualizadoEm  DateTime
-  deletadoEm    DateTime?
+model imagens {
+  id                       String                      @id
+  url                      String
+  nome                     String
+  data                     DateTime
+  visualizacoes            Int
+  endereco                 String
+  latitude                 String
+  longitude                String
+  id_do_usuario            String
+  criado_em                DateTime
+  atualizado_em            DateTime
+  deletado_em              DateTime?
+  tag_em_imagens_postagens tags_em_imagens_postagens[]
+  comentarios              comentarios[]
+  usuario                  usuarios                    @relation(fields: [id_do_usuario], references: [id])
 }
 
-model Postagem {
-  id            String    @id
-  titulo        String
-  descricao     String
-  texto         String
-  visualizacoes Int
-  idDoUsuario   String
-  criadoEm      DateTime
-  atualizadoEm  DateTime
-  deletadoEm    DateTime?
+model postagens {
+  id                       String                      @id
+  titulo                   String
+  descricao                String
+  texto                    String
+  visualizacoes            Int
+  id_do_usuario            String
+  criado_em                DateTime
+  atualizado_em            DateTime
+  deletado_em              DateTime?
+  tag_em_imagens_postagens tags_em_imagens_postagens[]
+  comentarios              comentarios[]
+  usuario                  usuarios                    @relation(fields: [id_do_usuario], references: [id])
 }
 
-model Tag {
-  id           String    @id
-  nome         String
-  idDoUsuario  String
-  criadoEm     DateTime
-  atualizadoEm DateTime
-  deletadoEm   DateTime?
+model tags {
+  id                       String                      @id
+  nome                     String
+  id_do_usuario            String
+  criado_em                DateTime
+  atualizado_em            DateTime
+  deletado_em              DateTime?
+  tag_em_imagens_postagens tags_em_imagens_postagens[]
+  usuario                  usuarios                    @relation(fields: [id_do_usuario], references: [id])
+}
+
+model comentarios {
+  id             String     @id
+  titulo         String
+  texto          String
+  id_do_usuario  String
+  id_da_postagem String?
+  id_da_imagem   String?
+  criado_em      DateTime
+  atualizado_em  DateTime
+  deletado_em    DateTime?
+  usuario        usuarios   @relation(fields: [id_do_usuario], references: [id])
+  imagem         imagens?   @relation(fields: [id_da_imagem], references: [id], onDelete: SetNull)
+  postagem       postagens? @relation(fields: [id_da_postagem], references: [id], onDelete: SetNull)
+  votos          votos[]
+}
+
+model votos {
+  id               String      @id
+  id_do_comentario String
+  voto             TipoDeVoto
+  id_do_usuario    String
+  criadoEm         DateTime
+  atualizadoEm     DateTime
+  usuario          usuarios    @relation(fields: [id_do_usuario], references: [id])
+  comentario       comentarios @relation(fields: [id_do_comentario], references: [id], onDelete: Cascade)
+}
+
+model tags_em_imagens_postagens {
+  id             String     @id
+  id_da_postagem String?
+  id_do_usuario  String
+  id_da_imagem   String?
+  id_da_tag      String
+  criado_em      DateTime
+  atualizado_em  DateTime
+  tag            tags       @relation(fields: [id_da_tag], references: [id], onDelete: Cascade)
+  imagem         imagens?   @relation(fields: [id_da_imagem], references: [id], onDelete: SetNull)
+  postagem       postagens? @relation(fields: [id_da_postagem], references: [id], onDelete: SetNull)
+}
+
+enum TipoDeCargo {
+  MODERADOR
+  ADIMINISTRADOR
+  USUARIO
+}
+
+enum TipoDeVoto {
+  POSITIVO
+  NEGATIVO
 }
