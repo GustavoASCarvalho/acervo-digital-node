@@ -6,3 +6,4 @@ export const imagemRotas = express.Router();
 
 imagemRotas.use(new AuthMiddleware().middleware);
 imagemRotas.post('/', new ImagemControlador().create);
+imagemRotas.delete('/:id', new ImagemControlador().delete);

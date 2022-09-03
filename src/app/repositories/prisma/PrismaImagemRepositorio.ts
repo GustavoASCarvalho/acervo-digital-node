@@ -11,22 +11,7 @@ export class PrismaImagemRepositorio implements ImagemRepositorio {
 
 		if (!imagem) return null;
 
-		return Imagem.criar(
-			{
-				url: imagem.url,
-				nome: imagem.nome,
-				data: imagem.data,
-				visualizacoes: imagem.visualizacoes,
-				endereco: imagem.endereco,
-				latitude: imagem.latitude,
-				longitude: imagem.longitude,
-				idDoUsuario: imagem.idDoUsuario,
-			},
-			id,
-			imagem.criadoEm,
-			imagem.atualizadoEm,
-			imagem.deletadoEm ?? undefined,
-		);
+		return Imagem.criar(imagem);
 	}
 	async create(data: Imagem): Promise<Imagem> {
 		if (await this.findById(data.id)) {
@@ -50,21 +35,18 @@ export class PrismaImagemRepositorio implements ImagemRepositorio {
 			},
 		});
 
-		return Imagem.criar(
-			{
-				data: imagem.data,
-				endereco: imagem.endereco,
-				idDoUsuario: imagem.idDoUsuario,
-				latitude: imagem.latitude,
-				longitude: imagem.longitude,
-				nome: imagem.nome,
-				url: imagem.url,
-				visualizacoes: imagem.visualizacoes,
-			},
-			imagem.id,
-			imagem.criadoEm,
-			imagem.atualizadoEm,
-			imagem.deletadoEm ?? undefined,
-		);
+		return Imagem.criar(imagem);
+	}
+	async delete(id: string, deletadoEm: string): Promise<Imagem> {
+		if (!(await this.findById(id))) {
+			throw new ApiError(`Imagem ${id} não existe.`, 400);
+		}
+
+		const imagem = await prisma.imagem.update({
+			where: { id },
+			data: { deletadoEm },
+		});
+
+		return Imagem.criar(imagem);
 	}
 }
