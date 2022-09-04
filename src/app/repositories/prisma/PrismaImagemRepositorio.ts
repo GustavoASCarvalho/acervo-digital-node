@@ -38,7 +38,7 @@ export class PrismaImagemRepositorio implements ImagemRepositorio {
 
 		return this.formatarImagem(imagem);
 	}
-	async delete(id: string, deletadoEm: string): Promise<Imagem> {
+	async delete(id: string, deletadoEm: Date): Promise<Imagem> {
 		if (!(await this.findById(id))) {
 			throw new ApiError(`Imagem ${id} não existe.`, 400);
 		}

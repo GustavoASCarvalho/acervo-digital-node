@@ -1,12 +1,16 @@
 import { ImagemRepositorio } from '../../src/app/repositories/ImagemRepositorio';
 import { Imagem } from '../../src/domain/entities/imagem';
+import { ApiError } from '../../src/helpers/types/api-error';
 
 export class InMemoryImagemRepositorio implements ImagemRepositorio {
-	public items: Imagem[] = [];
+	public itens: Imagem[] = [];
 	async findById(id: string): Promise<Imagem | null> {
-		return this.items.find(item => item.id === id) ?? null;
+		return this.itens.find(item => item.id === id) ?? null;
 	}
 	async create(data: Imagem): Promise<Imagem> {
+		if (await this.findById(data.id)) {
+			throw new ApiError(`Imagem ${data.id} já existe.`, 400);
+		}
 		const item = Imagem.criar(
 			{
 				data: data.props.data,
@@ -18,12 +22,20 @@ export class InMemoryImagemRepositorio implements ImagemRepositorio {
 				url: data.props.url,
 				visualizacoes: data.props.visualizacoes,
 			},
-			data.id,
 			data.criadoEm,
 			data.atualizadoEm,
+			data.id,
 			data.deletadoEm ?? undefined,
 		);
-		this.items.push(item);
+		this.itens.push(item);
 		return item;
+	}
+	async delete(id: string, deletadoEm: Date): Promise<Imagem> {
+		if (!(await this.findById(id))) {
+			throw new ApiError(`Imagem ${id} não existe.`, 400);
+		}
+		const index = this.itens.findIndex(item => item.id === id);
+		this.itens[index].deletadoEm = deletadoEm;
+		return this.itens[index];
 	}
 }

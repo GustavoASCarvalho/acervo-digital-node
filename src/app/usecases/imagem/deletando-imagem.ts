@@ -6,7 +6,7 @@ import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 export type DeletandoImagemRequisicao = {
 	idDaImagem: string;
 	idDoUsuario: string;
-	deletadoEm: string;
+	deletadoEm: Date;
 };
 
 export class DeletandoImagem {
@@ -26,11 +26,7 @@ export class DeletandoImagem {
 			this.usuarioRepositorio,
 		);
 
-		const imagem = await this.imagemRepositorio.delete(
-			idDaImagem,
-			idDoUsuario,
-			deletadoEm,
-		);
+		const imagem = await this.imagemRepositorio.delete(idDaImagem, deletadoEm);
 
 		return imagem;
 	}
