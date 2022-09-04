@@ -2,14 +2,14 @@ import { Request, Response } from 'express';
 import {
 	CriandoImagem,
 	CriandoImagemRequisicao,
-} from '../app/usecases/imagem/criando-imagem';
-import { PrismaUsuarioRepositorio } from '../app/repositories/prisma/PrismaUsuarioRepositorio';
-import { PrismaImagemRepositorio } from '../app/repositories/prisma/PrismaImagemRepositorio';
-import { ApiResponse } from '../helpers/types/api-response';
+} from '../usecases/imagem/criando-imagem';
+import { PrismaUsuarioRepositorio } from '../repositories/prisma/PrismaUsuarioRepositorio';
+import { PrismaImagemRepositorio } from '../repositories/prisma/PrismaImagemRepositorio';
+import { ApiResponse } from '../../helpers/types/api-response';
 import {
 	DeletandoImagem,
 	DeletandoImagemRequisicao,
-} from '../app/usecases/imagem/deletando-imagem';
+} from '../usecases/imagem/deletando-imagem';
 
 export class ImagemControlador {
 	async create(req: Request, res: Response): Promise<Response> {

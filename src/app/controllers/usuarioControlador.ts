@@ -2,10 +2,10 @@ import { Request, Response } from 'express';
 import {
 	CriandoUsuario,
 	CriandoUsuarioRequisicao,
-} from '../app/usecases/usuario/criando-usuario';
+} from '../usecases/usuario/criando-usuario';
 
-import { PrismaUsuarioRepositorio } from '../app/repositories/prisma/PrismaUsuarioRepositorio';
-import { ApiResponse } from '../helpers/types/api-response';
+import { PrismaUsuarioRepositorio } from '../repositories/prisma/PrismaUsuarioRepositorio';
+import { ApiResponse } from '../../helpers/types/api-response';
 
 export class UsuarioControlador {
 	async create(req: Request, res: Response): Promise<Response> {

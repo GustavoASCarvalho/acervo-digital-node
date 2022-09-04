@@ -1,5 +1,5 @@
 import express from 'express';
-import { ImagemControlador } from '../controllers/imagemControlador';
+import { ImagemControlador } from '../app/controllers/imagemControlador';
 import { AuthMiddleware } from '../middlewares/auth-middleware';
 
 export const imagemRotas = express.Router();

@@ -1,6 +1,6 @@
 import express from 'express';
-import { AutenticacaoControlador } from '../controllers/autenticacaoControlador';
-import { UsuarioControlador } from '../controllers/usuarioControlador';
+import { AutenticacaoControlador } from '../app/controllers/autenticacaoControlador';
+import { UsuarioControlador } from '../app/controllers/usuarioControlador';
 
 export const usuarioRotas = express.Router();
 

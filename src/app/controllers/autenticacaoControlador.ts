@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { ApiResponse } from '../helpers/types/api-response';
+import { ApiResponse } from '../../helpers/types/api-response';
 import {
 	AutenticandoUsuario,
 	AutenticandoUsuarioRequisicao,
-} from '../app/usecases/usuario/autenticando-usuario';
-import { PrismaAutenticacaoRepositorio } from '../app/repositories/prisma/PrismaAutenticacaoRepositorio';
+} from '../usecases/usuario/autenticando-usuario';
+import { PrismaAutenticacaoRepositorio } from '../repositories/prisma/PrismaAutenticacaoRepositorio';
 
 export class AutenticacaoControlador {
 	async autenticar(req: Request, res: Response): Promise<Response> {
