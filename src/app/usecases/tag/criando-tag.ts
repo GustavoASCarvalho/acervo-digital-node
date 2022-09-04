@@ -47,10 +47,10 @@ async function validacaoDaRequisicao(
 	usuarioRepositorio: UsuarioRepositorio,
 ) {
 	if (!nome) {
-		throw new ApiError(`Campo 'nome' na requisição.`, 400);
+		throw new ApiError(`Campo 'nome' ausente na requisição.`, 400);
 	}
 	if (!idDoUsuario) {
-		throw new ApiError(`Campo 'idDoUsuario' na requisição.`, 400);
+		throw new ApiError(`Campo 'idDoUsuario' ausente na requisição.`, 400);
 	}
 	const usuario = await usuarioRepositorio.findById(idDoUsuario);
 	if (!usuario) {
