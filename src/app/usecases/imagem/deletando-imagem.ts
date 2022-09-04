@@ -43,6 +43,9 @@ async function validacaoDaRequisicao(
 	if (!idDoUsuario) {
 		throw new ApiError(`Campo 'idDoUsuario' ausente na requisição.`, 400);
 	}
+	if (!idDaImagem) {
+		throw new ApiError(`Campo 'idDaImagem' ausente na requisição.`, 400);
+	}
 	const usuario = await usuarioRepositorio.findById(idDoUsuario);
 	if (!usuario) {
 		throw new ApiError(`Usuario '${idDoUsuario}' não encontrado.`, 404);
@@ -53,8 +56,8 @@ async function validacaoDaRequisicao(
 	}
 	if (
 		imagem.props.idDoUsuario !== idDoUsuario ||
-		usuario.props.cargo === TipoDeCargo.USUARIO
+		usuario.props.cargo !== TipoDeCargo.ADIMINISTRADOR
 	) {
-		throw new ApiError(`Não authorizado`, 400);
+		throw new ApiError(`Não authorizado.`, 400);
 	}
 }

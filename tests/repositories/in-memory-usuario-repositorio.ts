@@ -1,13 +1,10 @@
 import { UsuarioRepositorio } from '../../src/app/repositories/UsuarioRepositorio';
-import {
-	CargosDoUsuarioEnum,
-	Usuario,
-} from '../../src/domain/entities/usuario';
+import { TipoDeCargo, Usuario } from '../../src/domain/entities/usuario';
 
 export class InMemoryUsuarioRepositorio implements UsuarioRepositorio {
-	public items: Usuario[] = [];
+	public itens: Usuario[] = [];
 	async findById(id: string): Promise<Usuario | null> {
-		return this.items.find(item => item.id === id) ?? null;
+		return this.itens.find(item => item.id === id) ?? null;
 	}
 	async create(data: Usuario): Promise<Usuario> {
 		const item = Usuario.criar(
@@ -16,14 +13,14 @@ export class InMemoryUsuarioRepositorio implements UsuarioRepositorio {
 				email: data.props.email,
 				senha: data.props.senha,
 				imagemDePerfil: data.props.imagemDePerfil,
-				cargo: data.props.cargo as CargosDoUsuarioEnum,
+				cargo: data.props.cargo as TipoDeCargo,
 			},
-			data.id,
 			data.criadoEm,
 			data.atualizadoEm,
+			data.id,
 			data.deletadoEm ?? undefined,
 		);
-		this.items.push(item);
+		this.itens.push(item);
 		return item;
 	}
 }

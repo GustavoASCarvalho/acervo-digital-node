@@ -27,7 +27,7 @@ describe('Criando imagem usecase', () => {
 		usuario = Usuario.criar(propriedadesDoUsuario, new Date(), new Date());
 	});
 	it('Quando for chamado, e os dados forem passado corretamente, então a imagem deve ser criada com sucesso', async () => {
-		usuarioRepositorio.items.push(usuario);
+		usuarioRepositorio.itens.push(usuario);
 		const sut = new CriandoImagem(usuarioRepositorio, imagemRepositorio);
 		const res = await sut.executar({
 			data: new Date('26-05-2003'),
@@ -108,7 +108,7 @@ describe('Criando imagem usecase', () => {
 			esperado,
 		}) => {
 			const sut = new CriandoImagem(usuarioRepositorio, imagemRepositorio);
-			usuarioRepositorio.items.push(usuario);
+			usuarioRepositorio.itens.push(usuario);
 			try {
 				await sut.executar({
 					data: data,
