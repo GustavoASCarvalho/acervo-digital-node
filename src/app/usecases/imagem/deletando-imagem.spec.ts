@@ -6,7 +6,6 @@ import {
 	PropriedadesDoUsuario,
 	Usuario,
 } from '../../../domain/entities/usuario';
-import { CriandoImagem } from './criando-imagem';
 import { ApiError } from '../../../helpers/types/api-error';
 import { DeletandoImagem } from './deletando-imagem';
 
@@ -39,7 +38,7 @@ describe('Deletando imagem usecase', () => {
 		};
 		imagem = Imagem.criar(propriedadesDaImagem, new Date(), new Date());
 	});
-	it('Quando for chamado, e os dados forem passado corretamente, então o usuario deve ser criada com sucesso', async () => {
+	it('Quando for chamado, e os dados forem passado corretamente, então a imagem deve ser criada com sucesso', async () => {
 		usuarioRepositorio.itens.push(usuario);
 		imagemRepositorio.itens.push(imagem);
 		const sut = new DeletandoImagem(usuarioRepositorio, imagemRepositorio);
