@@ -5,7 +5,7 @@ export type PropriedadesDoComentario = {
 	texto: string;
 	idDoUsuario: string;
 	idDaPostagem?: string;
-	idDoImagem?: string;
+	idDaImagem?: string;
 };
 
 export class Comentario extends Entidade<PropriedadesDoComentario> {
