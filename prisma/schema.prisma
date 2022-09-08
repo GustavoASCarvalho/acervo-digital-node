@@ -37,6 +37,7 @@ model imagens {
   latitude                 String
   longitude                String
   id_do_usuario            String
+  e_sugestao               Boolean
   criado_em                DateTime
   atualizado_em            DateTime
   deletado_em              DateTime?
@@ -52,6 +53,7 @@ model postagens {
   texto                    String
   visualizacoes            Int
   id_do_usuario            String
+  e_sugestao               Boolean
   criado_em                DateTime
   atualizado_em            DateTime
   deletado_em              DateTime?
@@ -109,6 +111,32 @@ model tags_em_imagens_postagens {
   tag            tags       @relation(fields: [id_da_tag], references: [id], onDelete: Cascade)
   imagem         imagens?   @relation(fields: [id_da_imagem], references: [id], onDelete: SetNull)
   postagem       postagens? @relation(fields: [id_da_postagem], references: [id], onDelete: SetNull)
+}
+
+model imagens_em_postagem {
+  id             String   @id
+  id_da_postagem String
+  id_do_usuario  String
+  id_da_imagem   String
+  criado_em      DateTime
+  atualizado_em  DateTime
+}
+
+model redes_sociais {
+  id            String   @id
+  nome          String
+  url           String
+  criado_em     DateTime
+  atualizado_em DateTime
+}
+
+model usuario_tem_redes_sociais {
+  id                String   @id
+  id_da_rede_social String
+  id_do_usuario     String
+  nome_usuario      String
+  criado_em         DateTime
+  atualizado_em     DateTime
 }
 
 enum TipoDeCargo {

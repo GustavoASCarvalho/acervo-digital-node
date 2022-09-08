@@ -30,6 +30,7 @@ CREATE TABLE "imagens" (
     "latitude" TEXT NOT NULL,
     "longitude" TEXT NOT NULL,
     "id_do_usuario" TEXT NOT NULL,
+    "e_sugestao" BOOLEAN NOT NULL,
     "criado_em" TIMESTAMP(3) NOT NULL,
     "atualizado_em" TIMESTAMP(3) NOT NULL,
     "deletado_em" TIMESTAMP(3),
@@ -45,6 +46,7 @@ CREATE TABLE "postagens" (
     "texto" TEXT NOT NULL,
     "visualizacoes" INTEGER NOT NULL,
     "id_do_usuario" TEXT NOT NULL,
+    "e_sugestao" BOOLEAN NOT NULL,
     "criado_em" TIMESTAMP(3) NOT NULL,
     "atualizado_em" TIMESTAMP(3) NOT NULL,
     "deletado_em" TIMESTAMP(3),
@@ -102,6 +104,41 @@ CREATE TABLE "tags_em_imagens_postagens" (
     "atualizado_em" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "tags_em_imagens_postagens_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "imagens_em_postagem" (
+    "id" TEXT NOT NULL,
+    "id_da_postagem" TEXT NOT NULL,
+    "id_do_usuario" TEXT NOT NULL,
+    "id_da_imagem" TEXT NOT NULL,
+    "criado_em" TIMESTAMP(3) NOT NULL,
+    "atualizado_em" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "imagens_em_postagem_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "redes_sociais" (
+    "id" TEXT NOT NULL,
+    "nome" TEXT NOT NULL,
+    "url" TEXT NOT NULL,
+    "criado_em" TIMESTAMP(3) NOT NULL,
+    "atualizado_em" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "redes_sociais_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "usuario_tem_redes_sociais" (
+    "id" TEXT NOT NULL,
+    "id_da_rede_social" TEXT NOT NULL,
+    "id_do_usuario" TEXT NOT NULL,
+    "nome_usuario" TEXT NOT NULL,
+    "criado_em" TIMESTAMP(3) NOT NULL,
+    "atualizado_em" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "usuario_tem_redes_sociais_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
