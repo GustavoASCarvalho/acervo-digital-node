@@ -32,16 +32,14 @@ export class PrismaTagRepositorio implements TagRepositorio {
 		return this.formatarTag(tag);
 	}
 
-	async delete(id: string, deletadoEm: Date): Promise<Tag> {
+	async delete(id: string, deletadoEm: Date): Promise<void> {
 		if (!(await this.findById(id))) {
 			throw new ApiError(`Tag ${id} não existe.`, 400);
 		}
 
-		const tag = await prisma.tags.delete({
+		await prisma.tags.delete({
 			where: { id },
 		});
-
-		return this.formatarTag(tag);
 	}
 
 	private formatarTag(tag: tags): Tag {

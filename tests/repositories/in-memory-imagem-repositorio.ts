@@ -21,6 +21,7 @@ export class InMemoryImagemRepositorio implements ImagemRepositorio {
 				nome: data.props.nome,
 				url: data.props.url,
 				visualizacoes: data.props.visualizacoes,
+				eSugestao: data.props.eSugestao,
 			},
 			data.criadoEm,
 			data.atualizadoEm,
