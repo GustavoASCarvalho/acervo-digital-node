@@ -1,5 +1,4 @@
 import { Comentario } from '../../../domain/entities/comentario';
-import { Imagem } from '../../../domain/entities/imagem';
 import { ApiError } from '../../../helpers/types/api-error';
 import { ComentarioRepositorio } from '../../repositories/ComentarioRepositorio';
 import { ImagemRepositorio } from '../../repositories/ImagemRepositorio';
@@ -8,10 +7,10 @@ import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 
 export type CriandoComentarioRequisicao = {
 	titulo: string;
-    texto: string;
+	texto: string;
 	idDoUsuario: string;
-    idDaPostagem?: string;
-    idDaImagem?: string;
+	idDaPostagem?: string;
+	idDaImagem?: string;
 	criadoEm: Date;
 	atualizadoEm: Date;
 };
@@ -19,9 +18,9 @@ export type CriandoComentarioRequisicao = {
 export class CriandoComentario {
 	constructor(
 		private usuarioRepositorio: UsuarioRepositorio,
-        private postagemRepositorio: PostagemRepositorio,
+		private postagemRepositorio: PostagemRepositorio,
 		private imagemRepositorio: ImagemRepositorio,
-        private comentarioRepositorio: ComentarioRepositorio
+		private comentarioRepositorio: ComentarioRepositorio,
 	) {}
 
 	async executar({
@@ -35,17 +34,17 @@ export class CriandoComentario {
 	}: CriandoComentarioRequisicao) {
 		await validacaoDaRequisicao(
 			{
-                titulo,
-                texto,
-                idDoUsuario,
-                idDaPostagem,
-                idDaImagem,
-                criadoEm,
+				titulo,
+				texto,
+				idDoUsuario,
+				idDaPostagem,
+				idDaImagem,
+				criadoEm,
 				atualizadoEm,
 			},
 			this.usuarioRepositorio,
-            this.postagemRepositorio,
-            this.imagemRepositorio
+			this.postagemRepositorio,
+			this.imagemRepositorio,
 		);
 
 		const comentario = Comentario.criar(
@@ -74,11 +73,11 @@ async function validacaoDaRequisicao(
 		idDaPostagem,
 		idDaImagem,
 		criadoEm,
-        atualizadoEm
+		atualizadoEm,
 	}: CriandoComentarioRequisicao,
 	usuarioRepositorio: UsuarioRepositorio,
-    postagemRepositorio: PostagemRepositorio,
-    imagemRepositorio: ImagemRepositorio
+	postagemRepositorio: PostagemRepositorio,
+	imagemRepositorio: ImagemRepositorio,
 ) {
 	if (!titulo) {
 		throw new ApiError(`Campo 'titulo' ausente na requisição.`, 400);
@@ -91,23 +90,33 @@ async function validacaoDaRequisicao(
 	if (!idDoUsuario) {
 		throw new ApiError(`Campo 'idDoUsuario' ausente na requisição.`, 400);
 	}
-	if (!idDaPostagem) {
-		throw new ApiError(`Campo 'idDaPostagem' ausente na requisição.`, 400);
+	if (!idDaPostagem && !idDaImagem) {
+		throw new ApiError(
+			`Campo 'idDaPostagem' ou 'idDaImagem' ausente na requisição.`,
+			400,
+		);
 	}
-	if (!idDaImagem) {
-		throw new ApiError(`Campo 'idDaImagem' ausente na requisição.`, 400);
+	if (idDaPostagem && idDaImagem) {
+		throw new ApiError(
+			`Só é permitido comentario em uma imagem ou em uma postagem.`,
+			400,
+		);
 	}
 	const usuario = await usuarioRepositorio.findById(idDoUsuario);
 	if (!usuario) {
 		throw new ApiError(`Usuario '${idDoUsuario}' não encontrado.`, 404);
 	}
-    const postagem = await postagemRepositorio.findById(idDaPostagem);
-	if (!postagem) {
-		throw new ApiError(`Postagem '${idDaPostagem}' não encontrado.`, 404);
-	}
-    const imagem = await imagemRepositorio.findById(idDaImagem);
-	if (!imagem) {
-		throw new ApiError(`Imagem '${idDaImagem}' não encontrado.`, 404);
+	if (idDaPostagem) {
+		const postagem = await postagemRepositorio.findById(idDaPostagem);
+
+		if (!postagem) {
+			throw new ApiError(`Postagem '${idDaPostagem}' não encontrado.`, 404);
+		}
+	} else if (idDaImagem) {
+		const imagem = await imagemRepositorio.findById(idDaImagem);
+		if (!imagem) {
+			throw new ApiError(`Imagem '${idDaImagem}' não encontrado.`, 404);
+		}
 	}
 	if (!criadoEm) {
 		throw new ApiError(`Campo 'criadoEm' ausente na requisição.`, 400);

@@ -1,24 +1,35 @@
 import { Request, Response } from 'express';
-import {
-	CriandoUsuario,
-	CriandoUsuarioRequisicao,
-} from '../usecases/usuario/criando-usuario';
-
 import { PrismaUsuarioRepositorio } from '../repositories/prisma/PrismaUsuarioRepositorio';
 import { ApiResponse } from '../../helpers/types/api-response';
+import {
+	CriandoComentario,
+	CriandoComentarioRequisicao,
+} from '../usecases/comentario/criando-comentario';
+import { PrismaPostagemRepositorio } from '../repositories/prisma/PrismaPostagemRepositorio';
+import { PrismaImagemRepositorio } from '../repositories/prisma/PrismaImagemRepositorio';
+import { PrismaComentarioRepositorio } from '../repositories/prisma/PrismaComentarioRepositorio';
 
 export class ComentarioControlador {
 	async create(req: Request, res: Response): Promise<Response> {
-		const data: CriandoUsuarioRequisicao = req.body;
+		const data: CriandoComentarioRequisicao = req.body;
 		const usuarioRepositorio = new PrismaUsuarioRepositorio();
-		const criandoUsuario = new CriandoUsuario(usuarioRepositorio);
+		const postagemRepositorio = new PrismaPostagemRepositorio();
+		const imagemRepositorio = new PrismaImagemRepositorio();
+		const comentarioRepositorio = new PrismaComentarioRepositorio();
 
-		const usuario = await criandoUsuario.executar(data);
+		const criandoComentario = new CriandoComentario(
+			usuarioRepositorio,
+			postagemRepositorio,
+			imagemRepositorio,
+			comentarioRepositorio,
+		);
+
+		const comentario = await criandoComentario.executar(data);
 		return res.status(201).json({
-			message: `Usuario '${data.nome}' criado com sucesso`,
+			message: `Comentario '${comentario.props.texto}' criado com sucesso`,
 			statusCode: 201,
 			data: {
-				id: usuario.id,
+				id: comentario.id,
 			},
 		} as ApiResponse);
 	}

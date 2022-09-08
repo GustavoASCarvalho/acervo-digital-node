@@ -12,6 +12,7 @@ export type CriandoImagemRequisicao = {
 	idDoUsuario: string;
 	criadoEm: Date;
 	atualizadoEm: Date;
+	eSugestao: boolean;
 };
 
 export class CriandoImagem {
@@ -29,6 +30,7 @@ export class CriandoImagem {
 		longitude,
 		criadoEm,
 		atualizadoEm,
+		eSugestao,
 	}: CriandoImagemRequisicao) {
 		await validacaoDaRequisicao(
 			{
@@ -40,6 +42,7 @@ export class CriandoImagem {
 				longitude,
 				criadoEm,
 				atualizadoEm,
+				eSugestao,
 			},
 			this.usuarioRepositorio,
 		);
@@ -54,6 +57,7 @@ export class CriandoImagem {
 				longitude,
 				url: 'http://',
 				visualizacoes: 0,
+				eSugestao,
 			},
 			criadoEm,
 			atualizadoEm,
@@ -75,6 +79,7 @@ async function validacaoDaRequisicao(
 		longitude,
 		criadoEm,
 		atualizadoEm,
+		eSugestao,
 	}: CriandoImagemRequisicao,
 	usuarioRepositorio: UsuarioRepositorio,
 ) {
@@ -107,5 +112,8 @@ async function validacaoDaRequisicao(
 	}
 	if (!atualizadoEm) {
 		throw new ApiError(`Campo 'atualizadoEm' ausente na requisição.`, 400);
+	}
+	if (eSugestao == null) {
+		throw new ApiError(`Campo 'eSugestao' ausente na requisição.`, 400);
 	}
 }

@@ -10,6 +10,7 @@ export type CriandoPostagemRequisicao = {
 	idDoUsuario: string;
 	criadoEm: Date;
 	atualizadoEm: Date;
+	eSugestao: boolean;
 };
 
 export class CriandoPostagem {
@@ -25,9 +26,18 @@ export class CriandoPostagem {
 		idDoUsuario,
 		criadoEm,
 		atualizadoEm,
+		eSugestao,
 	}: CriandoPostagemRequisicao) {
 		await validacaoDaRequisicao(
-			{ titulo, descricao, texto, idDoUsuario, criadoEm, atualizadoEm },
+			{
+				titulo,
+				descricao,
+				texto,
+				idDoUsuario,
+				criadoEm,
+				atualizadoEm,
+				eSugestao,
+			},
 			this.usuarioRepositorio,
 		);
 
@@ -38,6 +48,7 @@ export class CriandoPostagem {
 				texto,
 				titulo,
 				visualizacoes: 0,
+				eSugestao,
 			},
 			criadoEm,
 			atualizadoEm,
