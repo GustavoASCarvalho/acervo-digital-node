@@ -6,6 +6,7 @@ export type PropriedadesDaPostagem = {
 	texto: string;
 	visualizacoes: number;
 	idDoUsuario: string;
+	eSugestao: boolean;
 };
 
 export class Postagem extends Entidade<PropriedadesDaPostagem> {

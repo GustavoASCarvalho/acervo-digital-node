@@ -1,9 +1,9 @@
 import { prisma } from '../../../prisma';
-import { AutenticacaoRepositorio } from '../AutenticacaoRepositorio';
 import { TipoDeCargo, Usuario } from '../../../domain/entities/usuario';
 import { ApiError } from '../../../helpers/types/api-error';
 import bcrypt from 'bcrypt';
 import { usuarios } from '@prisma/client';
+import { AutenticacaoRepositorio } from '../AutenticacaoRepositorio';
 
 export class PrismaAutenticacaoRepositorio implements AutenticacaoRepositorio {
 	async autenticar(email: string, senha: string): Promise<Usuario> {

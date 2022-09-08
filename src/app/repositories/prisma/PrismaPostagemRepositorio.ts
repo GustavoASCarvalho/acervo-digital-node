@@ -28,8 +28,21 @@ export class PrismaPostagemRepositorio implements PostagemRepositorio {
 				id: data.id,
 				criado_em: data.criadoEm,
 				atualizado_em: data.atualizadoEm,
+				e_sugestao: data.props.eSugestao,
 				deletado_em: data.deletadoEm ?? undefined,
 			},
+		});
+
+		return this.formatarPostagem(postagem);
+	}
+	async delete(id: string, deletadoEm: Date): Promise<Postagem> {
+		if (!(await this.findById(id))) {
+			throw new ApiError(`Postagem ${id} não existe.`, 400);
+		}
+
+		const postagem = await prisma.postagens.update({
+			where: { id },
+			data: { deletado_em: deletadoEm },
 		});
 
 		return this.formatarPostagem(postagem);
@@ -43,6 +56,7 @@ export class PrismaPostagemRepositorio implements PostagemRepositorio {
 				texto: postagem.texto,
 				titulo: postagem.titulo,
 				visualizacoes: postagem.visualizacoes,
+				eSugestao: postagem.e_sugestao,
 			},
 			postagem.criado_em,
 			postagem.atualizado_em,

@@ -9,6 +9,7 @@ export type PropriedadesDaImagem = {
 	latitude: string;
 	longitude: string;
 	idDoUsuario: string;
+	eSugestao: boolean;
 };
 
 export class Imagem extends Entidade<PropriedadesDaImagem> {

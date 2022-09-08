@@ -33,6 +33,7 @@ export class PrismaImagemRepositorio implements ImagemRepositorio {
 				longitude: data.props.longitude,
 				nome: data.props.nome,
 				url: data.props.url,
+				e_sugestao: data.props.eSugestao,
 			},
 		});
 
@@ -62,6 +63,7 @@ export class PrismaImagemRepositorio implements ImagemRepositorio {
 				latitude: imagem.latitude,
 				longitude: imagem.longitude,
 				idDoUsuario: imagem.id_do_usuario,
+				eSugestao: imagem.e_sugestao,
 			},
 			imagem.criado_em,
 			imagem.atualizado_em,

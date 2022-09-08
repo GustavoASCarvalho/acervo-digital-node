@@ -11,20 +11,21 @@ datasource db {
 }
 
 model usuarios {
-  id               String        @id
-  nome             String
-  email            String        @unique
-  senha            String
-  imagem_de_perfil String
-  cargo            TipoDeCargo
-  criado_em        DateTime
-  atualizado_em    DateTime
-  deletado_em      DateTime?
-  comentarios      comentarios[]
-  votos            votos[]
-  imagens          imagens[]
-  postagens        postagens[]
-  tags             tags[]
+  id                        String                      @id
+  nome                      String
+  email                     String                      @unique
+  senha                     String
+  imagem_de_perfil          String
+  cargo                     TipoDeCargo
+  criado_em                 DateTime
+  atualizado_em             DateTime
+  deletado_em               DateTime?
+  comentarios               comentarios[]
+  votos                     votos[]
+  imagens                   imagens[]
+  postagens                 postagens[]
+  tags                      tags[]
+  usuario_tem_redes_sociais usuario_tem_redes_sociais[]
 }
 
 model imagens {
@@ -123,20 +124,23 @@ model imagens_em_postagem {
 }
 
 model redes_sociais {
-  id            String   @id
-  nome          String
-  url           String
-  criado_em     DateTime
-  atualizado_em DateTime
+  id                        String                      @id
+  nome                      String
+  url                       String
+  criado_em                 DateTime
+  atualizado_em             DateTime
+  usuario_tem_redes_sociais usuario_tem_redes_sociais[]
 }
 
 model usuario_tem_redes_sociais {
-  id                String   @id
+  id                String        @id
   id_da_rede_social String
   id_do_usuario     String
   nome_usuario      String
   criado_em         DateTime
   atualizado_em     DateTime
+  usuario           usuarios      @relation(fields: [id_do_usuario], references: [id])
+  rede_social       redes_sociais @relation(fields: [id_da_rede_social], references: [id])
 }
 
 enum TipoDeCargo {

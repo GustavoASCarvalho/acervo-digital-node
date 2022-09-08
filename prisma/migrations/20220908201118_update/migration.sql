@@ -176,3 +176,9 @@ ALTER TABLE "tags_em_imagens_postagens" ADD CONSTRAINT "tags_em_imagens_postagen
 
 -- AddForeignKey
 ALTER TABLE "tags_em_imagens_postagens" ADD CONSTRAINT "tags_em_imagens_postagens_id_da_postagem_fkey" FOREIGN KEY ("id_da_postagem") REFERENCES "postagens"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "usuario_tem_redes_sociais" ADD CONSTRAINT "usuario_tem_redes_sociais_id_do_usuario_fkey" FOREIGN KEY ("id_do_usuario") REFERENCES "usuarios"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "usuario_tem_redes_sociais" ADD CONSTRAINT "usuario_tem_redes_sociais_id_da_rede_social_fkey" FOREIGN KEY ("id_da_rede_social") REFERENCES "redes_sociais"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

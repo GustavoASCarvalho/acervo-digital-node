@@ -34,6 +34,18 @@ export class PrismaComentarioRepositorio implements ComentarioRepositorio {
 
 		return this.formatarComentario(comentario);
 	}
+	async delete(id: string, deletadoEm: Date): Promise<Comentario> {
+		if (!(await this.findById(id))) {
+			throw new ApiError(`Comentario ${id} não existe.`, 400);
+		}
+
+		const comentario = await prisma.comentarios.update({
+			where: { id },
+			data: { deletado_em: deletadoEm },
+		});
+
+		return this.formatarComentario(comentario);
+	}
 
 	private formatarComentario(comentario: comentarios): Comentario {
 		return Comentario.criar(

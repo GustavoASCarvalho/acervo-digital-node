@@ -50,6 +50,21 @@ export class PrismaUsuarioRepositorio implements UsuarioRepositorio {
 		return this.formatarUsuario(usuario);
 	}
 
+	async delete(id: string, deletadoEm: Date): Promise<Usuario> {
+		if (!(await this.findById(id))) {
+			throw new ApiError(`RedeSocial ${id} não existe.`, 400);
+		}
+
+		const usuario = await prisma.usuarios.update({
+			where: { id },
+			data: {
+				deletado_em: deletadoEm,
+			},
+		});
+
+		return this.formatarUsuario(usuario);
+	}
+
 	private formatarUsuario(usuario: usuarios): Usuario {
 		return Usuario.criar(
 			{
