@@ -1,3 +1,4 @@
+import { format } from 'path';
 import { Comentario } from '../../../domain/entities/comentario';
 import { ApiError } from '../../../helpers/types/api-error';
 import { ComentarioRepositorio } from '../../repositories/ComentarioRepositorio';
@@ -79,17 +80,14 @@ async function validacaoDaRequisicao(
 	postagemRepositorio: PostagemRepositorio,
 	imagemRepositorio: ImagemRepositorio,
 ) {
-	if (!titulo) {
-		throw new ApiError(`Campo 'titulo' ausente na requisição.`, 400);
-	} else if (titulo.length >= 255) {
-		throw new ApiError(`Campo 'titulo' invalido.`, 400);
+	const campos = { titulo, texto, idDoUsuario, criadoEm, atualizadoEm };
+
+	for (const [key, value] of Object.entries(campos)) {
+		if (!value) {
+			throw new ApiError(`Campo '${key}' ausente na requisição.`, 400);
+		}
 	}
-	if (!texto) {
-		throw new ApiError(`Campo 'texto' ausente na requisição.`, 400);
-	}
-	if (!idDoUsuario) {
-		throw new ApiError(`Campo 'idDoUsuario' ausente na requisição.`, 400);
-	}
+
 	if (!idDaPostagem && !idDaImagem) {
 		throw new ApiError(
 			`Campo 'idDaPostagem' ou 'idDaImagem' ausente na requisição.`,
@@ -106,22 +104,14 @@ async function validacaoDaRequisicao(
 	if (!usuario) {
 		throw new ApiError(`Usuario '${idDoUsuario}' não encontrado.`, 404);
 	}
-	if (idDaPostagem) {
-		const postagem = await postagemRepositorio.findById(idDaPostagem);
 
-		if (!postagem) {
-			throw new ApiError(`Postagem '${idDaPostagem}' não encontrado.`, 404);
-		}
-	} else if (idDaImagem) {
-		const imagem = await imagemRepositorio.findById(idDaImagem);
-		if (!imagem) {
-			throw new ApiError(`Imagem '${idDaImagem}' não encontrado.`, 404);
-		}
+	const postagem = await postagemRepositorio.findById(idDaPostagem!);
+	if (!postagem && idDaPostagem) {
+		throw new ApiError(`Postagem '${idDaPostagem}' não encontrado.`, 404);
 	}
-	if (!criadoEm) {
-		throw new ApiError(`Campo 'criadoEm' ausente na requisição.`, 400);
-	}
-	if (!atualizadoEm) {
-		throw new ApiError(`Campo 'atualizadoEm' ausente na requisição.`, 400);
+
+	const imagem = await imagemRepositorio.findById(idDaImagem!);
+	if (!imagem && idDaImagem) {
+		throw new ApiError(`Imagem '${idDaImagem}' não encontrado.`, 404);
 	}
 }

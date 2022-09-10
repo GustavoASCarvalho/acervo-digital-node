@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 
 export type JwtPayload = {
 	id: string;
+	exp: number;
 };
 
 export class AuthMiddleware {
@@ -16,9 +17,13 @@ export class AuthMiddleware {
 
 		const token = authorization.split(' ')[1];
 
-		const { id } = jwt.verify(token, process.env.JWT_PASS!) as JwtPayload;
+		try {
+			const { id } = jwt.verify(token, process.env.JWT_PASS!) as JwtPayload;
+			res.locals.id = id;
+		} catch (error) {
+			throw new ApiError(`Não autorizado`, 401);
+		}
 
-		res.locals.id = id;
 		next();
 	}
 }
