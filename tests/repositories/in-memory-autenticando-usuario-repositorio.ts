@@ -1,24 +1,12 @@
 import { AutenticacaoRepositorio } from '../../src/app/repositories/AutenticacaoRepositorio';
-import { TipoDeCargo, Usuario } from '../../src/domain/entities/usuario';
+import { Usuario } from '../../src/domain/entities/usuario';
 import { ApiError } from '../../src/helpers/types/api-error';
+import { usuarios } from '../usuario-memory';
 
 export class InMemoryUsuarioAutenticacaoRepositorio
 	implements AutenticacaoRepositorio
 {
-	public itens: Usuario[] = [
-		Usuario.criar(
-			{
-				nome: 'nome',
-				email: 'email@gmail.com',
-				senha: 'senha',
-				imagemDePerfil: 'http://imagem',
-				cargo: TipoDeCargo.USUARIO,
-			},
-			new Date(),
-			new Date(),
-			'1',
-		),
-	];
+	public itens: Usuario[] = usuarios;
 	async autenticar(email: string, senha: string): Promise<Usuario> {
 		const usuario = this.itens.find(item => item.props.email === email);
 

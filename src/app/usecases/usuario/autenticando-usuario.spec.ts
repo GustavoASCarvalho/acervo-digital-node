@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { InMemoryUsuarioAutenticacaoRepositorio } from '../../../../tests/repositories/in-memory-autenticando-usuario-repositorio';
+import { usuario } from '../../../../tests/usuario-memory';
 import { ApiError } from '../../../helpers/types/api-error';
 import { AutenticandoUsuario } from './autenticando-usuario';
 
@@ -22,13 +23,13 @@ describe('Criando usuario usecase', () => {
 
 	it('Quando for chamado, e os dados forem passado corretamente, então o usuario deve ser criado com sucesso', async () => {
 		const res = await sut.executar({
-			email: 'email@gmail.com',
-			senha: 'senha',
+			email: usuario.props.email,
+			senha: usuario.props.senha,
 		});
 		expect(res).toBe(
 			jwt.sign(
 				{
-					id: '1',
+					id: usuario.id,
 				},
 				process.env.JWT_PASS!,
 				{ expiresIn: '8h' },

@@ -1,25 +1,16 @@
 import { TagRepositorio } from '../../src/app/repositories/TagRepositorio';
 import { Tag } from '../../src/domain/entities/tag';
 import { ApiError } from '../../src/helpers/types/api-error';
+import { tags } from '../tag-memory';
 
 export class InMemoryTagRepositorio implements TagRepositorio {
-	public itens: Tag[] = [];
+	public itens: Tag[] = tags;
 	async findById(id: string): Promise<Tag | null> {
 		return this.itens.find(item => item.id === id) ?? null;
 	}
 	async create(data: Tag): Promise<Tag> {
-		const item = Tag.criar(
-			{
-				idDoUsuario: data.props.idDoUsuario,
-				nome: data.props.nome,
-			},
-			data.criadoEm,
-			data.atualizadoEm,
-			data.id,
-			data.deletadoEm ?? undefined,
-		);
-		this.itens.push(item);
-		return item;
+		this.itens.push(data);
+		return data;
 	}
 	async delete(id: string, deletadoEm: Date): Promise<void> {
 		if (!(await this.findById(id))) {

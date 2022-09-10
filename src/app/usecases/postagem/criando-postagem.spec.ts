@@ -8,26 +8,17 @@ import {
 } from '../../../domain/entities/usuario';
 import { CriandoPostagem } from './criando-postagem';
 import { ApiError } from '../../../helpers/types/api-error';
+import { usuario } from '../../../../tests/usuario-memory';
 
 describe('Criando postagem usecase', () => {
 	let usuarioRepositorio: InMemoryUsuarioRepositorio;
 	let postagemRepositorio: InMemoryPostagemRepositorio;
-	let usuario: Usuario;
 	let erro: unknown;
 	beforeEach(() => {
 		usuarioRepositorio = new InMemoryUsuarioRepositorio();
 		postagemRepositorio = new InMemoryPostagemRepositorio();
-		const propriedadesDoUsuario: PropriedadesDoUsuario = {
-			nome: 'Usuario',
-			email: 'usuario@email.com',
-			senha: 'senha',
-			imagemDePerfil: 'https://www.imagem.com/image.png',
-			cargo: TipoDeCargo.USUARIO,
-		};
-		usuario = Usuario.criar(propriedadesDoUsuario, new Date(), new Date());
 	});
 	it('Quando for chamado, e os dados forem passado corretamente, então a postagem deve ser criada com sucesso', async () => {
-		usuarioRepositorio.itens.push(usuario);
 		const sut = new CriandoPostagem(usuarioRepositorio, postagemRepositorio);
 		const res = await sut.executar({
 			descricao: 'descrição',
@@ -36,6 +27,7 @@ describe('Criando postagem usecase', () => {
 			titulo: 'titulo',
 			atualizadoEm: new Date(),
 			criadoEm: new Date(),
+			eSugestao: true,
 		});
 		expect(res).toBeInstanceOf(Postagem);
 	});
@@ -50,6 +42,7 @@ describe('Criando postagem usecase', () => {
 				titulo: 'titulo',
 				atualizadoEm: new Date(),
 				criadoEm: new Date(),
+				eSugestao: false,
 			});
 		} catch (err) {
 			erro = err;
@@ -59,13 +52,14 @@ describe('Criando postagem usecase', () => {
 		);
 	});
 	test.each`
-		descricao      | idDoUsuario | texto      | titulo      | criadoEm      | atualizadoEm  | esperado
-		${null}        | ${'1'}      | ${'texto'} | ${'titulo'} | ${new Date()} | ${new Date()} | ${'descricao'}
-		${'descricao'} | ${null}     | ${'texto'} | ${'titulo'} | ${new Date()} | ${new Date()} | ${'idDoUsuario'}
-		${'descricao'} | ${'1'}      | ${null}    | ${'titulo'} | ${new Date()} | ${new Date()} | ${'texto'}
-		${'descricao'} | ${'1'}      | ${'texto'} | ${null}     | ${new Date()} | ${new Date()} | ${'titulo'}
-		${'descricao'} | ${'1'}      | ${'texto'} | ${'titulo'} | ${null}       | ${new Date()} | ${'criadoEm'}
-		${'descricao'} | ${'1'}      | ${'texto'} | ${'titulo'} | ${new Date()} | ${null}       | ${'atualizadoEm'}
+		descricao      | idDoUsuario | texto      | titulo      | criadoEm      | atualizadoEm  | eSugestao | esperado
+		${null}        | ${'1'}      | ${'texto'} | ${'titulo'} | ${new Date()} | ${new Date()} | ${false}  | ${'descricao'}
+		${'descricao'} | ${null}     | ${'texto'} | ${'titulo'} | ${new Date()} | ${new Date()} | ${false}  | ${'idDoUsuario'}
+		${'descricao'} | ${'1'}      | ${null}    | ${'titulo'} | ${new Date()} | ${new Date()} | ${false}  | ${'texto'}
+		${'descricao'} | ${'1'}      | ${'texto'} | ${null}     | ${new Date()} | ${new Date()} | ${false}  | ${'titulo'}
+		${'descricao'} | ${'1'}      | ${'texto'} | ${'titulo'} | ${null}       | ${new Date()} | ${false}  | ${'criadoEm'}
+		${'descricao'} | ${'1'}      | ${'texto'} | ${'titulo'} | ${new Date()} | ${null}       | ${false}  | ${'atualizadoEm'}
+		${'descricao'} | ${'1'}      | ${'texto'} | ${'titulo'} | ${new Date()} | ${new Date()} | ${null}   | ${'atualizadoEm'}
 	`(
 		'Quando for chamado, e o campo $esperado for nulo, então deve disparar um erro',
 		async ({
@@ -76,8 +70,8 @@ describe('Criando postagem usecase', () => {
 			criadoEm,
 			atualizadoEm,
 			esperado,
+			eSugestao,
 		}) => {
-			usuarioRepositorio.itens.push(usuario);
 			const sut = new CriandoPostagem(usuarioRepositorio, postagemRepositorio);
 
 			try {
@@ -88,6 +82,7 @@ describe('Criando postagem usecase', () => {
 					titulo: titulo,
 					atualizadoEm: atualizadoEm,
 					criadoEm: criadoEm,
+					eSugestao: eSugestao,
 				});
 			} catch (err) {
 				erro = err;

@@ -1,64 +1,39 @@
 import { InMemoryUsuarioRepositorio } from '../../../../tests/repositories/in-memory-usuario-repositorio';
 import { InMemoryImagemRepositorio } from '../../../../tests/repositories/in-memory-imagem-repositorio';
-import { Imagem, PropriedadesDaImagem } from '../../../domain/entities/imagem';
-import {
-	TipoDeCargo,
-	PropriedadesDoUsuario,
-	Usuario,
-} from '../../../domain/entities/usuario';
+import { Imagem } from '../../../domain/entities/imagem';
 import { ApiError } from '../../../helpers/types/api-error';
 import { DeletandoImagem } from './deletando-imagem';
+import {
+	adiministrador,
+	moderador,
+	usuario,
+} from '../../../../tests/usuario-memory';
+import { usuario_imagem } from '../../../../tests/imagem-memory';
 
 describe('Deletando imagem usecase', () => {
 	let usuarioRepositorio: InMemoryUsuarioRepositorio;
 	let imagemRepositorio: InMemoryImagemRepositorio;
-	let usuario: Usuario;
-	let imagem: Imagem;
 	let erro: unknown;
 	beforeEach(() => {
 		usuarioRepositorio = new InMemoryUsuarioRepositorio();
 		imagemRepositorio = new InMemoryImagemRepositorio();
-		const propriedadesDoUsuario: PropriedadesDoUsuario = {
-			nome: 'Usuario',
-			email: 'usuario@email.com',
-			senha: 'senha',
-			imagemDePerfil: 'https://www.imagem.com/image.png',
-			cargo: TipoDeCargo.ADIMINISTRADOR,
-		};
-		usuario = Usuario.criar(propriedadesDoUsuario, new Date(), new Date());
-		const propriedadesDaImagem: PropriedadesDaImagem = {
-			data: new Date('26-05-2003'),
-			endereco: 'Rua dos gatos',
-			idDoUsuario: usuario.id,
-			nome: 'Imagem de um gato',
-			latitude: '34',
-			longitude: '-122',
-			url: 'http://www.imagem.com/image.png',
-			visualizacoes: 0,
-		};
-		imagem = Imagem.criar(propriedadesDaImagem, new Date(), new Date());
 	});
-	it('Quando for chamado, e os dados forem passado corretamente, então a imagem deve ser criada com sucesso', async () => {
-		usuarioRepositorio.itens.push(usuario);
-		imagemRepositorio.itens.push(imagem);
+	it('Quando for chamado, e os dados forem passado corretamente, então a imagem deve ser deletada com sucesso', async () => {
 		const sut = new DeletandoImagem(usuarioRepositorio, imagemRepositorio);
 		const res = await sut.executar({
 			deletadoEm: new Date(),
-			idDaImagem: imagem.id,
-			idDoUsuario: usuario.id,
+			idDaImagem: usuario_imagem.id,
+			idDoUsuario: adiministrador.id,
 		});
 		expect(res).toBeInstanceOf(Imagem);
 	});
 	it('Quando for chamado, e o idDoUsuario corresponder a um usuario sem permissões, então deve disparar um erro', async () => {
-		usuarioRepositorio.itens.push(usuario);
-		usuario.props.cargo = TipoDeCargo.USUARIO;
-		imagemRepositorio.itens.push(imagem);
 		const sut = new DeletandoImagem(usuarioRepositorio, imagemRepositorio);
 		try {
 			await sut.executar({
 				deletadoEm: new Date(),
-				idDaImagem: imagem.id,
-				idDoUsuario: usuario.id,
+				idDaImagem: usuario_imagem.id,
+				idDoUsuario: moderador.id,
 			});
 		} catch (err) {
 			erro = err;
@@ -66,13 +41,11 @@ describe('Deletando imagem usecase', () => {
 		expect(erro).toEqual(new ApiError(`Não authorizado.`, 400));
 	});
 	it('Quando for chamado, e o idDoUsuario não corresponder a um usuario valido, então deve disparar um erro', async () => {
-		usuarioRepositorio.itens.push(usuario);
-		imagemRepositorio.itens.push(imagem);
 		const sut = new DeletandoImagem(usuarioRepositorio, imagemRepositorio);
 		try {
 			await sut.executar({
 				deletadoEm: new Date(),
-				idDaImagem: imagem.id,
+				idDaImagem: usuario_imagem.id,
 				idDoUsuario: 'Id inexistente',
 			});
 		} catch (err) {
@@ -83,8 +56,6 @@ describe('Deletando imagem usecase', () => {
 		);
 	});
 	it('Quando for chamado, e o idDaImagem não corresponder a uma imagem valida, então deve disparar um erro', async () => {
-		usuarioRepositorio.itens.push(usuario);
-		imagemRepositorio.itens.push(imagem);
 		const sut = new DeletandoImagem(usuarioRepositorio, imagemRepositorio);
 		try {
 			await sut.executar({
@@ -108,10 +79,8 @@ describe('Deletando imagem usecase', () => {
 	`(
 		'Quando for chamado, e o campo $esperado for nulo, então deve disparar um erro',
 		async ({ idDaImagem, idDoUsuario, deletadoEm, esperado }) => {
-			usuarioRepositorio.itens.push(usuario);
-			imagemRepositorio.itens.push(imagem);
 			const sut = new DeletandoImagem(usuarioRepositorio, imagemRepositorio);
-			if (idDaImagem) idDaImagem = imagem.id;
+			if (idDaImagem) idDaImagem = usuario_imagem.id;
 			if (idDoUsuario) idDoUsuario = usuario.id;
 			try {
 				await sut.executar({

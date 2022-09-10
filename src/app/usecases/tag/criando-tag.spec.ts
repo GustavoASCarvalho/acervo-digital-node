@@ -1,30 +1,17 @@
 import { InMemoryUsuarioRepositorio } from '../../../../tests/repositories/in-memory-usuario-repositorio';
 import { InMemoryTagRepositorio } from '../../../../tests/repositories/in-memory-tag-repositorio';
 import { Tag } from '../../../domain/entities/tag';
-import {
-	TipoDeCargo,
-	PropriedadesDoUsuario,
-	Usuario,
-} from '../../../domain/entities/usuario';
 import { CriandoTag } from './criando-tag';
 import { ApiError } from '../../../helpers/types/api-error';
+import { usuario } from '../../../../tests/usuario-memory';
 
 describe('Criando tag usecase', () => {
 	let usuarioRepositorio: InMemoryUsuarioRepositorio;
 	let tagRepositorio: InMemoryTagRepositorio;
-	let usuario: Usuario;
 	let erro: unknown;
 	beforeEach(() => {
 		usuarioRepositorio = new InMemoryUsuarioRepositorio();
 		tagRepositorio = new InMemoryTagRepositorio();
-		const propriedadesDoUsuario: PropriedadesDoUsuario = {
-			nome: 'Usuario',
-			email: 'usuario@email.com',
-			senha: 'senha',
-			imagemDePerfil: 'https://www.imagem.com/image.png',
-			cargo: TipoDeCargo.USUARIO,
-		};
-		usuario = Usuario.criar(propriedadesDoUsuario, new Date(), new Date());
 	});
 	it('Quando for chamado, e os dados forem passado corretamente, então a tag deve ser criada com sucesso', async () => {
 		usuarioRepositorio.itens.push(usuario);
