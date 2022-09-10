@@ -4,7 +4,8 @@ import { ApiError } from '../../../helpers/types/api-error';
 import { ImagemRepositorio } from '../../repositories/ImagemRepositorio';
 import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 
-export type CriandoImagemRequisicao = {
+export type AtualizandoImagemRequisicao = {
+	id: string;
 	nome: string;
 	data: Date;
 	endereco: string;
@@ -16,55 +17,52 @@ export type CriandoImagemRequisicao = {
 	eSugestao: boolean;
 };
 
-export class CriandoImagem {
+export class AtualizandoImagem {
 	constructor(
 		private usuarioRepositorio: UsuarioRepositorio,
 		private imagemRepositorio: ImagemRepositorio,
 	) {}
 
 	async executar({
+		id,
 		nome,
 		data,
 		endereco,
-		idDoUsuario,
 		latitude,
 		longitude,
 		criadoEm,
 		atualizadoEm,
 		eSugestao,
-	}: CriandoImagemRequisicao) {
+		idDoUsuario,
+	}: AtualizandoImagemRequisicao) {
 		await validacaoDaRequisicao(
 			{
+				id,
 				nome,
 				data,
 				endereco,
-				idDoUsuario,
 				latitude,
 				longitude,
 				criadoEm,
 				atualizadoEm,
 				eSugestao,
+				idDoUsuario,
 			},
 			this.usuarioRepositorio,
 		);
 
-		const imagem = Imagem.criar(
-			{
-				nome,
-				data,
-				endereco,
-				idDoUsuario,
-				latitude,
-				longitude,
-				url: 'http://',
-				visualizacoes: 0,
-				eSugestao,
-			},
+		const imagem = await this.imagemRepositorio.update({
+			id,
+			nome,
+			data,
+			endereco,
+			latitude,
+			longitude,
 			criadoEm,
 			atualizadoEm,
-		);
-
-		await this.imagemRepositorio.create(imagem);
+			eSugestao,
+			idDoUsuario,
+		});
 
 		return imagem;
 	}
@@ -72,19 +70,21 @@ export class CriandoImagem {
 
 async function validacaoDaRequisicao(
 	{
+		id,
 		nome,
 		data,
 		endereco,
 		idDoUsuario,
 		latitude,
 		longitude,
-		criadoEm,
 		atualizadoEm,
+		criadoEm,
 		eSugestao,
-	}: CriandoImagemRequisicao,
+	}: AtualizandoImagemRequisicao,
 	usuarioRepositorio: UsuarioRepositorio,
 ) {
 	const campos = {
+		id,
 		nome,
 		data,
 		endereco,
@@ -107,7 +107,7 @@ async function validacaoDaRequisicao(
 		throw new ApiError(`Usuario '${idDoUsuario}' não encontrado.`, 404);
 	}
 
-	if (usuario.props.cargo == TipoDeCargo.USUARIO && !eSugestao) {
+	if (usuario.props.cargo == TipoDeCargo.USUARIO) {
 		throw new ApiError(`Não autorizado.`, 401);
 	}
 }

@@ -3,6 +3,7 @@ import { Imagem } from '../../../domain/entities/imagem';
 import { ImagemRepositorio } from '../ImagemRepositorio';
 import { ApiError } from '../../../helpers/types/api-error';
 import { imagens } from '@prisma/client';
+import { AtualizandoImagemRequisicao } from '../../usecases/imagem/atualizando-imagem';
 
 export class PrismaImagemRepositorio implements ImagemRepositorio {
 	async findById(id: string): Promise<Imagem | null> {
@@ -47,6 +48,27 @@ export class PrismaImagemRepositorio implements ImagemRepositorio {
 		const imagem = await prisma.imagens.update({
 			where: { id },
 			data: { deletado_em: deletadoEm },
+		});
+
+		return this.formatarImagem(imagem);
+	}
+	async update(data: AtualizandoImagemRequisicao): Promise<Imagem> {
+		if (!(await this.findById(data.id))) {
+			throw new ApiError(`Imagem ${data.id} não existe.`, 400);
+		}
+
+		const imagem = await prisma.imagens.update({
+			where: { id: data.id },
+			data: {
+				atualizado_em: data.atualizadoEm,
+				data: data.data,
+				criado_em: data.criadoEm,
+				e_sugestao: data.eSugestao,
+				endereco: data.endereco,
+				latitude: data.latitude,
+				longitude: data.longitude,
+				nome: data.nome,
+			},
 		});
 
 		return this.formatarImagem(imagem);

@@ -1,4 +1,3 @@
-import { format } from 'path';
 import { Comentario } from '../../../domain/entities/comentario';
 import { ApiError } from '../../../helpers/types/api-error';
 import { ComentarioRepositorio } from '../../repositories/ComentarioRepositorio';
@@ -83,7 +82,7 @@ async function validacaoDaRequisicao(
 	const campos = { titulo, texto, idDoUsuario, criadoEm, atualizadoEm };
 
 	for (const [key, value] of Object.entries(campos)) {
-		if (!value) {
+		if (value == null || value === undefined) {
 			throw new ApiError(`Campo '${key}' ausente na requisição.`, 400);
 		}
 	}
