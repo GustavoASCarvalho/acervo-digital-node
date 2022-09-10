@@ -1,7 +1,6 @@
 import { InMemoryImagemRepositorio } from '../../../../tests/repositories/in-memory-imagem-repositorio';
 import { ApiError } from '../../../helpers/types/api-error';
 import { RecuperandoImagens } from './recuperando-imagens';
-import { usuarios } from '../../../../tests/usuario-memory';
 import { imagens } from '../../../../tests/imagem-memory';
 
 describe('Criando imagem usecase', () => {

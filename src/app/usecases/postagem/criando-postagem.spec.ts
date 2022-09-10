@@ -1,11 +1,6 @@
 import { InMemoryUsuarioRepositorio } from '../../../../tests/repositories/in-memory-usuario-repositorio';
 import { InMemoryPostagemRepositorio } from '../../../../tests/repositories/in-memory-postagem-repositorio';
 import { Postagem } from '../../../domain/entities/postagem';
-import {
-	TipoDeCargo,
-	PropriedadesDoUsuario,
-	Usuario,
-} from '../../../domain/entities/usuario';
 import { CriandoPostagem } from './criando-postagem';
 import { ApiError } from '../../../helpers/types/api-error';
 import { usuario } from '../../../../tests/usuario-memory';

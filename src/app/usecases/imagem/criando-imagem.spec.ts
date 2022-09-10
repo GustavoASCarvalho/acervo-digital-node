@@ -1,7 +1,6 @@
 import { InMemoryUsuarioRepositorio } from '../../../../tests/repositories/in-memory-usuario-repositorio';
 import { InMemoryImagemRepositorio } from '../../../../tests/repositories/in-memory-imagem-repositorio';
 import { Imagem } from '../../../domain/entities/imagem';
-import { Usuario } from '../../../domain/entities/usuario';
 import { CriandoImagem } from './criando-imagem';
 import { ApiError } from '../../../helpers/types/api-error';
 import { usuario } from '../../../../tests/usuario-memory';
