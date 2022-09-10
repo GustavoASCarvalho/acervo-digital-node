@@ -15,7 +15,8 @@ export class BuscandoImagens {
 
 		const imagem = await this.imagemRepositorio.search(query);
 
-		if (!imagem) throw new ApiError('Nenhuma imagem encontrada', 404);
+		if (imagem.length === 0)
+			throw new ApiError('Nenhuma imagem encontrada.', 404);
 
 		return imagem;
 	}

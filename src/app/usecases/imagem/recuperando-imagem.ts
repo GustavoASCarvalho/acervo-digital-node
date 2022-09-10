@@ -15,7 +15,7 @@ export class RecuperandoImagem {
 
 		const imagem = await this.imagemRepositorio.findById(id);
 
-		if (!imagem) throw new ApiError('Nenhuma imagem encontrada', 404);
+		if (!imagem) throw new ApiError('Nenhuma imagem encontrada.', 404);
 
 		return imagem;
 	}

@@ -42,7 +42,6 @@ export class InMemoryImagemRepositorio implements ImagemRepositorio {
 	async search(query: string): Promise<Imagem[]> {
 		let tags: Tag[] = this.tags.filter(item => item.props.nome.includes(query));
 		let imgs: Imagem[] = [];
-
 		this.itens.forEach(item => {
 			this.tagsEmImagensPostagens.forEach(tagsEmImagem => {
 				tags.forEach(tag => {
@@ -55,6 +54,11 @@ export class InMemoryImagemRepositorio implements ImagemRepositorio {
 				});
 			});
 		});
+		this.itens.forEach(item => {
+			if (item.props.nome.includes(query)) imgs.push(item);
+		});
+
+		imgs = imgs.filter((este, i) => imgs.indexOf(este) === i);
 
 		return imgs;
 	}

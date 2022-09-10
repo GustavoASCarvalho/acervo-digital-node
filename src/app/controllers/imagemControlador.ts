@@ -74,7 +74,6 @@ export class ImagemControlador {
 			);
 		}
 		if (query) {
-			console.log(query);
 			const buscandoImagens = new BuscandoImagens(imagemRepositorio);
 			imagens = await buscandoImagens.executar({ query });
 		} else {
