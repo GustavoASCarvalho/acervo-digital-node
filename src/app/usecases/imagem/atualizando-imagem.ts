@@ -1,4 +1,3 @@
-import { Imagem } from '../../../domain/entities/imagem';
 import { TipoDeCargo } from '../../../domain/entities/usuario';
 import { ApiError } from '../../../helpers/types/api-error';
 import { ImagemRepositorio } from '../../repositories/ImagemRepositorio';

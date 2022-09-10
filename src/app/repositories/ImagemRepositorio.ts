@@ -6,4 +6,6 @@ export interface ImagemRepositorio {
 	create(data: Imagem): Promise<Imagem>;
 	delete(id: string, deletadoEm: Date): Promise<Imagem>;
 	update(data: AtualizandoImagemRequisicao): Promise<Imagem>;
+	read(): Promise<Imagem[]>;
+	search(query: string): Promise<Imagem[]>;
 }

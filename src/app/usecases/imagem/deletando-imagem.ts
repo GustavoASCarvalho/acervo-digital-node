@@ -54,8 +54,11 @@ async function validacaoDaRequisicao(
 	if (!imagem) {
 		throw new ApiError(`Imagem '${idDaImagem}' não encontrada.`, 404);
 	}
+	console.log(usuario.props.cargo);
+	console.log(usuario.props.cargo != TipoDeCargo.ADIMINISTRADOR);
+	console.log(usuario.props.cargo !== TipoDeCargo.ADIMINISTRADOR);
 	if (
-		imagem.props.idDoUsuario !== idDoUsuario ||
+		imagem.props.idDoUsuario !== idDoUsuario &&
 		usuario.props.cargo !== TipoDeCargo.ADIMINISTRADOR
 	) {
 		throw new ApiError(`Não authorizado.`, 400);

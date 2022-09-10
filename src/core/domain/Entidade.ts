@@ -26,6 +26,14 @@ export abstract class Entidade<T> {
 		this._deletadoEm = deletadoEm;
 	}
 
+	set atualizadoEm(atualizadoEm: Date) {
+		this._atualizadoEm = atualizadoEm;
+	}
+
+	set criadoEm(criadoEm: Date) {
+		this._criadoEm = criadoEm;
+	}
+
 	constructor(
 		props: T,
 		criadoEm: Date,

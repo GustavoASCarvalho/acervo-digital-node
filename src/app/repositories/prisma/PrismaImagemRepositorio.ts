@@ -74,6 +74,41 @@ export class PrismaImagemRepositorio implements ImagemRepositorio {
 		return this.formatarImagem(imagem);
 	}
 
+	async read(): Promise<Imagem[]> {
+		let imagens: Imagem[] = [];
+		const imagem = await prisma.imagens.findMany();
+		imagem.forEach(imagem => imagens.push(this.formatarImagem(imagem)));
+		return imagens;
+	}
+
+	async search(query: string): Promise<Imagem[]> {
+		let imagens: Imagem[] = [];
+		const imagem = await prisma.imagens.findMany({
+			where: {
+				OR: [
+					{
+						nome: {
+							contains: query,
+						},
+					},
+					{
+						tag_em_imagens_postagens: {
+							some: {
+								tag: {
+									nome: {
+										contains: query,
+									},
+								},
+							},
+						},
+					},
+				],
+			},
+		});
+		imagem.forEach(imagem => imagens.push(this.formatarImagem(imagem)));
+		return imagens;
+	}
+
 	private formatarImagem(imagem: imagens): Imagem {
 		return Imagem.criar(
 			{

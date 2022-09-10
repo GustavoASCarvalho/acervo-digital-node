@@ -10,6 +10,11 @@ import {
 	DeletandoImagem,
 	DeletandoImagemRequisicao,
 } from '../usecases/imagem/deletando-imagem';
+import { BuscandoImagens } from '../usecases/imagem/buscando-imagens';
+import { Imagem } from '../../domain/entities/imagem';
+import { RecuperandoImagens } from '../usecases/imagem/recuperando-imagens';
+import { RecuperandoImagem } from '../usecases/imagem/recuperando-imagem';
+import { ApiError } from '../../helpers/types/api-error';
 
 export class ImagemControlador {
 	async create(req: Request, res: Response): Promise<Response> {
@@ -55,6 +60,47 @@ export class ImagemControlador {
 			statusCode: 200,
 			data: {
 				id: imagem.id,
+			},
+		} as ApiResponse);
+	}
+	async search(req: Request, res: Response): Promise<Response> {
+		const { query } = req.query;
+		let imagens: Imagem[];
+		const imagemRepositorio = new PrismaImagemRepositorio();
+		if (typeof query !== 'string' && query) {
+			throw new ApiError(
+				`Paramentro de busca "query" deve ser uma string`,
+				400,
+			);
+		}
+		if (query) {
+			console.log(query);
+			const buscandoImagens = new BuscandoImagens(imagemRepositorio);
+			imagens = await buscandoImagens.executar({ query });
+		} else {
+			const recuperandoImagens = new RecuperandoImagens(imagemRepositorio);
+			imagens = await recuperandoImagens.executar();
+		}
+		return res.status(200).json({
+			message: `Sucesso.`,
+			statusCode: 200,
+			data: {
+				imagens,
+			},
+		} as ApiResponse);
+	}
+	async read(req: Request, res: Response): Promise<Response> {
+		const id = req.params['id'];
+		const imagemRepositorio = new PrismaImagemRepositorio();
+		const recuperandoImagem = new RecuperandoImagem(imagemRepositorio);
+
+		const imagem = await recuperandoImagem.executar({ id });
+
+		return res.status(200).json({
+			message: `Imagem '${imagem.id}' encontrada com sucesso.`,
+			statusCode: 200,
+			data: {
+				imagem,
 			},
 		} as ApiResponse);
 	}
