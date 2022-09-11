@@ -15,6 +15,10 @@ import { Imagem } from '../../domain/entities/imagem';
 import { RecuperandoImagens } from '../usecases/imagem/recuperando-imagens';
 import { RecuperandoImagem } from '../usecases/imagem/recuperando-imagem';
 import { ApiError } from '../../helpers/types/api-error';
+import {
+	AtualizandoImagem,
+	AtualizandoImagemRequisicao,
+} from '../usecases/imagem/atualizando-imagem';
 
 export class ImagemControlador {
 	async create(req: Request, res: Response): Promise<Response> {
@@ -100,6 +104,50 @@ export class ImagemControlador {
 			statusCode: 200,
 			data: {
 				imagem,
+			},
+		} as ApiResponse);
+	}
+
+	async update(req: Request, res: Response): Promise<Response> {
+		const {
+			nome,
+			data,
+			endereco,
+			latitude,
+			longitude,
+			criadoEm,
+			atualizadoEm,
+			eSugestao,
+		} = req.body;
+		const id = req.params['id'];
+		const idDoUsuario = res.locals.id;
+		const dataReq = {
+			id,
+			nome,
+			data,
+			endereco,
+			latitude,
+			longitude,
+			idDoUsuario,
+			criadoEm,
+			atualizadoEm,
+			eSugestao,
+		} as AtualizandoImagemRequisicao;
+
+		const usuarioRepositorio = new PrismaUsuarioRepositorio();
+		const imagemRepositorio = new PrismaImagemRepositorio();
+		const atualizandoImagem = new AtualizandoImagem(
+			usuarioRepositorio,
+			imagemRepositorio,
+		);
+
+		const imagem = await atualizandoImagem.executar(dataReq);
+
+		return res.status(201).json({
+			message: `Imagem '${imagem.props.nome}' atualizada com sucesso.`,
+			statusCode: 201,
+			data: {
+				id: imagem.id,
 			},
 		} as ApiResponse);
 	}
