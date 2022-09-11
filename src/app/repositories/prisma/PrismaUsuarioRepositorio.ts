@@ -3,6 +3,7 @@ import { TipoDeCargo, Usuario } from '../../../domain/entities/usuario';
 import { UsuarioRepositorio } from '../UsuarioRepositorio';
 import { ApiError } from '../../../helpers/types/api-error';
 import { usuarios } from '@prisma/client';
+import { AtualizandoUsuarioRequisicao } from '../../usecases/usuario/atualizando-usuario';
 
 export class PrismaUsuarioRepositorio implements UsuarioRepositorio {
 	async findById(id: string): Promise<Usuario | null> {
@@ -52,13 +53,32 @@ export class PrismaUsuarioRepositorio implements UsuarioRepositorio {
 
 	async delete(id: string, deletadoEm: Date): Promise<Usuario> {
 		if (!(await this.findById(id))) {
-			throw new ApiError(`RedeSocial ${id} não existe.`, 400);
+			throw new ApiError(`Usuario ${id} não existe.`, 400);
 		}
 
 		const usuario = await prisma.usuarios.update({
 			where: { id },
 			data: {
 				deletado_em: deletadoEm,
+			},
+		});
+
+		return this.formatarUsuario(usuario);
+	}
+
+	async update(
+		data: Omit<AtualizandoUsuarioRequisicao, 'idDoUsuario'>,
+	): Promise<Usuario> {
+		const usuario = await prisma.usuarios.update({
+			where: { id: data.id },
+			data: {
+				nome: data.nome,
+				email: data.email,
+				senha: data.senha,
+				imagem_de_perfil: data.imagemDePerfil,
+				criado_em: data.criadoEm,
+				atualizado_em: data.atualizadoEm,
+				cargo: data.cargo,
 			},
 		});
 
