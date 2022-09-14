@@ -13,7 +13,9 @@ export class BuscandoImagens {
 			query,
 		});
 
-		const imagem = await this.imagemRepositorio.search(query);
+		const imagem = await this.imagemRepositorio.search(
+			query.split(' ').join('').toLocaleLowerCase(),
+		);
 
 		if (imagem.length === 0)
 			throw new ApiError('Nenhuma imagem encontrada.', 404);

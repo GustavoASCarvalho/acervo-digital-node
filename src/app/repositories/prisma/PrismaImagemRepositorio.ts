@@ -89,6 +89,7 @@ export class PrismaImagemRepositorio implements ImagemRepositorio {
 					{
 						nome: {
 							contains: query,
+							mode: 'insensitive',
 						},
 					},
 					{
@@ -97,6 +98,7 @@ export class PrismaImagemRepositorio implements ImagemRepositorio {
 								tag: {
 									nome: {
 										contains: query,
+										mode: 'insensitive',
 									},
 								},
 							},
