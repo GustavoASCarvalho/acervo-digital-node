@@ -106,11 +106,11 @@ async function validacaoDaRequisicao(
 
 	const postagem = await postagemRepositorio.findById(idDaPostagem!);
 	if (!postagem && idDaPostagem) {
-		throw new ApiError(`Postagem '${idDaPostagem}' não encontrado.`, 404);
+		throw new ApiError(`Postagem '${idDaPostagem}' não encontrada.`, 404);
 	}
 
 	const imagem = await imagemRepositorio.findById(idDaImagem!);
 	if (!imagem && idDaImagem) {
-		throw new ApiError(`Imagem '${idDaImagem}' não encontrado.`, 404);
+		throw new ApiError(`Imagem '${idDaImagem}' não encontrada.`, 404);
 	}
 }

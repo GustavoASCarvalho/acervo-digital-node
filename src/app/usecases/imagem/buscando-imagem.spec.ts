@@ -2,6 +2,7 @@ import { InMemoryImagemRepositorio } from '../../../../tests/repositories/in-mem
 import { ApiError } from '../../../helpers/types/api-error';
 import { BuscandoImagens } from './buscando-imagens';
 import { usuario_imagem } from '../../../../tests/imagem-memory';
+import { moderador_tag } from '../../../../tests/tag-memory';
 
 describe('Criando imagem usecase', () => {
 	let imagemRepositorio: InMemoryImagemRepositorio;
@@ -9,10 +10,17 @@ describe('Criando imagem usecase', () => {
 	beforeEach(() => {
 		imagemRepositorio = new InMemoryImagemRepositorio();
 	});
-	it('Quando for chamado, e os dados forem passado corretamente, deve retornanr as imagens correspondentes', async () => {
+	it('Quando for chamado, e os dados corresponderem ao nome de uma imagem, deve retornanr as imagens correspondentes', async () => {
 		const sut = new BuscandoImagens(imagemRepositorio);
 		const res = await sut.executar({
-			query: usuario_imagem.props.nome,
+			query: usuario_imagem.props.nome.split(' ')[0],
+		});
+		expect(res).toBeInstanceOf(Array);
+	});
+	it('Quando for chamado, e os dados corresponderem ao nome de uma tag da imagem, deve retornanr as imagens correspondentes', async () => {
+		const sut = new BuscandoImagens(imagemRepositorio);
+		const res = await sut.executar({
+			query: moderador_tag.props.nome.split('')[0],
 		});
 		expect(res).toBeInstanceOf(Array);
 	});

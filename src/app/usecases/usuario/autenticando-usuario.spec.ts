@@ -36,6 +36,28 @@ describe('Criando usuario usecase', () => {
 			),
 		);
 	});
+	it('Quando for chamado, porém nenhum usuario for encontrado com o email passado, então deve disparar um erro', async () => {
+		try {
+			await sut.executar({
+				email: 'goku62@edu.com.br',
+				senha: 'senha',
+			});
+		} catch (err) {
+			erro = err;
+		}
+		expect(erro).toEqual(new ApiError('Email ou senha inválidos.', 401));
+	});
+	it('Quando for chamado, e a senha não corresponder ao email, então deve disparar um erro', async () => {
+		try {
+			await sut.executar({
+				email: usuario.props.email,
+				senha: 'minha senha invalida',
+			});
+		} catch (err) {
+			erro = err;
+		}
+		expect(erro).toEqual(new ApiError('Email ou senha inválidos.', 401));
+	});
 	it('Quando for chamado, e o email não for válido, então deve disparar um erro', async () => {
 		try {
 			await sut.executar({

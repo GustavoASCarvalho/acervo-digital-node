@@ -1,6 +1,5 @@
 import { InMemoryUsuarioRepositorio } from '../../../../tests/repositories/in-memory-usuario-repositorio';
 import { InMemoryImagemRepositorio } from '../../../../tests/repositories/in-memory-imagem-repositorio';
-import { Imagem } from '../../../domain/entities/imagem';
 import { ApiError } from '../../../helpers/types/api-error';
 import { moderador, usuario } from '../../../../tests/usuario-memory';
 import { AtualizandoImagem } from './atualizando-imagem';
@@ -18,7 +17,7 @@ describe('Atualziando imagem usecase', () => {
 		const sut = new AtualizandoImagem(usuarioRepositorio, imagemRepositorio);
 		const res = await sut.executar({
 			id: usuario_imagem.id,
-			data: new Date('26-05-2003'),
+			data: new Date('2022-09-11T18:55:10.444Z'),
 			endereco: 'Rua dos gatos',
 			idDoUsuario: moderador.id,
 			nome: 'Imagem de um gato',
@@ -28,7 +27,17 @@ describe('Atualziando imagem usecase', () => {
 			atualizadoEm: new Date(),
 			eSugestao: true,
 		});
-		expect(res).toBeInstanceOf(Imagem);
+		expect(res.props).toStrictEqual({
+			data: new Date('2022-09-11T18:55:10.444Z'),
+			eSugestao: true,
+			endereco: 'Rua dos gatos',
+			idDoUsuario: usuario.id,
+			latitude: '34',
+			longitude: '-122',
+			nome: 'Imagem de um gato',
+			url: 'http://',
+			visualizacoes: 3,
+		});
 	});
 	it('Quando for chamado, e o idDoUsuario não corresponder a um usuario valido, então deve disparar um erro', async () => {
 		const sut = new AtualizandoImagem(usuarioRepositorio, imagemRepositorio);
@@ -50,6 +59,28 @@ describe('Atualziando imagem usecase', () => {
 		}
 		expect(erro).toEqual(
 			new ApiError(`Usuario 'Id inexistente' não encontrado.`, 404),
+		);
+	});
+	it('Quando for chamado, e o idDaImagem não corresponder a uma imagem valida, então deve disparar um erro', async () => {
+		const sut = new AtualizandoImagem(usuarioRepositorio, imagemRepositorio);
+		try {
+			await sut.executar({
+				id: 'Id inexistente',
+				data: new Date('26-05-2003'),
+				endereco: 'Rua dos gatos',
+				idDoUsuario: moderador.id,
+				nome: 'Imagem de um gato',
+				latitude: '34',
+				longitude: '-122',
+				criadoEm: new Date(),
+				atualizadoEm: new Date(),
+				eSugestao: false,
+			});
+		} catch (err) {
+			erro = err;
+		}
+		expect(erro).toEqual(
+			new ApiError(`Imagem 'Id inexistente' não existe.`, 400),
 		);
 	});
 	it('Quando for chamado, e o usuario tiver o cargo de usuario e a sugestão for false, então deve disparar um erro', async () => {
