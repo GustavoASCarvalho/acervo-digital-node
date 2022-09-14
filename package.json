@@ -9,6 +9,9 @@
 		"dev": "nodemon --exec ts-node src/server.ts",
 		"migration": "npx prisma migrate dev --name update"
 	},
+	"prisma": {
+		"seed": "ts-node prisma/seed.ts"
+	},
 	"keywords": [],
 	"author": "Gustavo Alexandre da Silva Carvalho",
 	"license": "MIT",
