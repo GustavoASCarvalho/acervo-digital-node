@@ -1,38 +1,38 @@
-import { InMemoryUsuarioRepositorio } from '../../../../tests/repositories/in-memory-usuario-repositorio';
 import { InMemoryTagRepositorio } from '../../../../tests/repositories/in-memory-tag-repositorio';
-import { Tag } from '../../../domain/entities/tag';
-import { CriandoTag } from './criando-tag';
-import { ApiError } from '../../../helpers/types/api-error';
+import { InMemoryUsuarioRepositorio } from '../../../../tests/repositories/in-memory-usuario-repositorio';
 import { usuario } from '../../../../tests/usuario-memory';
+import { Tag } from '../../../domain/entities/tag';
+import { ApiError } from '../../../helpers/types/api-error';
+import { CriandoTag } from './criando-tag';
 
 describe('Criando tag usecase', () => {
-	let usuarioRepositorio: InMemoryUsuarioRepositorio;
-	let tagRepositorio: InMemoryTagRepositorio;
 	let erro: unknown;
+	let tagRepositorio: InMemoryTagRepositorio;
+	let usuarioRepositorio: InMemoryUsuarioRepositorio;
 	beforeEach(() => {
-		usuarioRepositorio = new InMemoryUsuarioRepositorio();
 		tagRepositorio = new InMemoryTagRepositorio();
+		usuarioRepositorio = new InMemoryUsuarioRepositorio();
 	});
-	it('Quando for chamado, e os dados forem passado corretamente, então a tag deve ser criada com sucesso', async () => {
-		usuarioRepositorio.itens.push(usuario);
+	it('Quando for chamado, e os dados forem passado corretamente, então o tag deve ser criado com sucesso', async () => {
 		const sut = new CriandoTag(usuarioRepositorio, tagRepositorio);
 		const res = await sut.executar({
 			idDoUsuario: usuario.id,
-			nome: 'nome',
-			atualizadoEm: new Date(),
+			nome: 'Tag dahora',
 			criadoEm: new Date(),
+			atualizadoEm: new Date(),
 		});
 		expect(res).toBeInstanceOf(Tag);
 	});
-	it('Quando for chamado, e o idDoUsuario não corresponder a um usuario valido, então deve disparar um erro', async () => {
+	it('Quando for chamado, e o idDoUsuario não corresponder a nenhum usuario, então deve disparar um erro', async () => {
+		const tagRepositorio = new InMemoryTagRepositorio();
 		const sut = new CriandoTag(usuarioRepositorio, tagRepositorio);
 
 		try {
 			await sut.executar({
 				idDoUsuario: 'Id inexistente',
-				nome: 'nome',
-				atualizadoEm: new Date(),
+				nome: 'Tag dahora',
 				criadoEm: new Date(),
+				atualizadoEm: new Date(),
 			});
 		} catch (err) {
 			erro = err;
@@ -42,23 +42,22 @@ describe('Criando tag usecase', () => {
 		);
 	});
 	test.each`
-		nome           | idDoUsuario | criadoEm      | atualizadoEm  | esperado
-		${null}        | ${'1'}      | ${new Date()} | ${new Date()} | ${'nome'}
-		${'descricao'} | ${null}     | ${new Date()} | ${new Date()} | ${'idDoUsuario'}
-		${'descricao'} | ${'1'}      | ${null}       | ${new Date()} | ${'criadoEm'}
-		${'descricao'} | ${'1'}      | ${new Date()} | ${null}       | ${'atualizadoEm'}
+		nome      | idDoUsuario | criadoEm      | atualizadoEm  | esperado
+		${null}   | ${'2'}      | ${new Date()} | ${new Date()} | ${'nome'}
+		${'nome'} | ${null}     | ${new Date()} | ${new Date()} | ${'idDoUsuario'}
+		${'nome'} | ${'2'}      | ${null}       | ${new Date()} | ${'criadoEm'}
+		${'nome'} | ${'2'}      | ${new Date()} | ${null}       | ${'atualizadoEm'}
 	`(
 		'Quando for chamado, e o campo $esperado for nulo, então deve disparar um erro',
 		async ({ nome, idDoUsuario, criadoEm, atualizadoEm, esperado }) => {
-			usuarioRepositorio.itens.push(usuario);
+			const tagRepositorio = new InMemoryTagRepositorio();
 			const sut = new CriandoTag(usuarioRepositorio, tagRepositorio);
-
 			try {
 				await sut.executar({
 					nome: nome,
 					idDoUsuario: idDoUsuario ? usuario.id : idDoUsuario,
-					criadoEm: criadoEm,
 					atualizadoEm: atualizadoEm,
+					criadoEm: criadoEm,
 				});
 			} catch (err) {
 				erro = err;

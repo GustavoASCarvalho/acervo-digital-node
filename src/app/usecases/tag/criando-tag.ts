@@ -46,20 +46,15 @@ async function validacaoDaRequisicao(
 	{ nome, idDoUsuario, criadoEm, atualizadoEm }: CriandoTagRequisicao,
 	usuarioRepositorio: UsuarioRepositorio,
 ) {
-	if (!nome) {
-		throw new ApiError(`Campo 'nome' ausente na requisição.`, 400);
-	}
-	if (!idDoUsuario) {
-		throw new ApiError(`Campo 'idDoUsuario' ausente na requisição.`, 400);
+	const campos = { nome, idDoUsuario, criadoEm, atualizadoEm };
+
+	for (const [key, value] of Object.entries(campos)) {
+		if (value == null || value === undefined) {
+			throw new ApiError(`Campo '${key}' ausente na requisição.`, 400);
+		}
 	}
 	const usuario = await usuarioRepositorio.findById(idDoUsuario);
 	if (!usuario) {
 		throw new ApiError(`Usuario '${idDoUsuario}' não encontrado.`, 404);
-	}
-	if (!criadoEm) {
-		throw new ApiError(`Campo 'criadoEm' ausente na requisição.`, 400);
-	}
-	if (!atualizadoEm) {
-		throw new ApiError(`Campo 'atualizadoEm' ausente na requisição.`, 400);
 	}
 }
