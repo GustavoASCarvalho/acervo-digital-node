@@ -1,7 +1,7 @@
 import { IStorageProvider } from '../../src/utils/IStorageProvider';
 import { Tag } from '../../src/domain/entities/tag';
 import { ApiError } from '../../src/helpers/types/api-error';
-import { S3 } from 'aws-sdk';
+import { S3 } from '@aws-sdk/client-s3';
 
 export class InMemoryStorageProvider implements IStorageProvider {
 	public client: S3;

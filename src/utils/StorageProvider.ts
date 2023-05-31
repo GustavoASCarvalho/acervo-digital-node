@@ -1,4 +1,4 @@
-import aws, { S3 } from 'aws-sdk';
+import { S3 } from '@aws-sdk/client-s3';
 import path from 'path';
 import mime from 'mime';
 import fs from 'fs';
@@ -10,7 +10,7 @@ export class StorageProvider implements IStorageProvider {
 	public client: S3;
 
 	constructor() {
-		this.client = new aws.S3({
+		this.client = new S3({
 			region: process.env.S3_REGION!,
 		});
 	}
@@ -25,15 +25,13 @@ export class StorageProvider implements IStorageProvider {
 
 		const fileContent = await fs.promises.readFile(originalPath);
 
-		await this.client
-			.putObject({
-				Bucket: process.env.S3_BUCKET!,
-				Key: filename,
-				ACL: 'public-read',
-				Body: fileContent,
-				ContentType: contentType,
-			})
-			.promise();
+		await this.client.putObject({
+			Bucket: process.env.S3_BUCKET!,
+			Key: filename,
+			ACL: 'public-read',
+			Body: fileContent,
+			ContentType: contentType,
+		});
 
 		await fs.promises.unlink(originalPath);
 
@@ -41,11 +39,9 @@ export class StorageProvider implements IStorageProvider {
 	}
 
 	async delete(filename: string): Promise<void> {
-		await this.client
-			.deleteObject({
-				Bucket: process.env.S3_BUCKET!,
-				Key: filename,
-			})
-			.promise();
+		await this.client.deleteObject({
+			Bucket: process.env.S3_BUCKET!,
+			Key: filename,
+		});
 	}
 }
