@@ -19,24 +19,31 @@ import {
 	AtualizandoImagem,
 	AtualizandoImagemRequisicao,
 } from '../usecases/imagem/atualizando-imagem';
+import { StorageProvider } from '../../utils/StorageProvider';
 
 export class ImagemControlador {
 	async create(req: Request, res: Response): Promise<Response> {
-		const data: CriandoImagemRequisicao = req.body;
+		let data: CriandoImagemRequisicao = req.body;
+		data.file = req.file;
+
 		const usuarioRepositorio = new PrismaUsuarioRepositorio();
 		const imagemRepositorio = new PrismaImagemRepositorio();
+		const storageProvider = new StorageProvider();
+
 		const criandoImagem = new CriandoImagem(
 			usuarioRepositorio,
 			imagemRepositorio,
+			storageProvider,
 		);
 
 		const imagem = await criandoImagem.executar(data);
 
+		console.log(data);
 		return res.status(201).json({
 			message: `Imagem '${data.nome}' criada com sucesso.`,
 			statusCode: 201,
 			data: {
-				id: imagem.id,
+				id: 'imagem.id',
 			},
 		} as ApiResponse);
 	}

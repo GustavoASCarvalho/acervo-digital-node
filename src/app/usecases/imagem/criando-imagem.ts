@@ -1,6 +1,7 @@
 import { Imagem } from '../../../domain/entities/imagem';
 import { TipoDeCargo } from '../../../domain/entities/usuario';
 import { ApiError } from '../../../helpers/types/api-error';
+import { StorageProvider } from '../../../utils/StorageProvider';
 import { ImagemRepositorio } from '../../repositories/ImagemRepositorio';
 import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
 
@@ -14,12 +15,14 @@ export type CriandoImagemRequisicao = {
 	criadoEm: Date;
 	atualizadoEm: Date;
 	eSugestao: boolean;
+	file: Express.Multer.File | undefined;
 };
 
 export class CriandoImagem {
 	constructor(
 		private usuarioRepositorio: UsuarioRepositorio,
 		private imagemRepositorio: ImagemRepositorio,
+		private storageProvider: StorageProvider,
 	) {}
 
 	async executar({
@@ -32,6 +35,7 @@ export class CriandoImagem {
 		criadoEm,
 		atualizadoEm,
 		eSugestao,
+		file,
 	}: CriandoImagemRequisicao) {
 		await validacaoDaRequisicao(
 			{
@@ -44,9 +48,12 @@ export class CriandoImagem {
 				criadoEm,
 				atualizadoEm,
 				eSugestao,
+				file,
 			},
 			this.usuarioRepositorio,
 		);
+
+		const url = await this.storageProvider.upload(file!.filename);
 
 		const imagem = Imagem.criar(
 			{
@@ -56,7 +63,7 @@ export class CriandoImagem {
 				idDoUsuario,
 				latitude,
 				longitude,
-				url: 'http://',
+				url,
 				visualizacoes: 0,
 				eSugestao,
 			},
@@ -81,6 +88,7 @@ async function validacaoDaRequisicao(
 		criadoEm,
 		atualizadoEm,
 		eSugestao,
+		file,
 	}: CriandoImagemRequisicao,
 	usuarioRepositorio: UsuarioRepositorio,
 ) {
@@ -94,6 +102,7 @@ async function validacaoDaRequisicao(
 		criadoEm,
 		atualizadoEm,
 		eSugestao,
+		file,
 	};
 
 	for (const [key, value] of Object.entries(campos)) {
@@ -109,5 +118,14 @@ async function validacaoDaRequisicao(
 
 	if (usuario.props.cargo == TipoDeCargo.USUARIO && !eSugestao) {
 		throw new ApiError(`Não autorizado.`, 401);
+	}
+
+	if (
+		file &&
+		file.mimetype !== 'image/jpeg' &&
+		file.mimetype !== 'image/png' &&
+		file.mimetype !== 'image/webp'
+	) {
+		throw new ApiError(`Formato de arquivo inválido.`, 400);
 	}
 }
