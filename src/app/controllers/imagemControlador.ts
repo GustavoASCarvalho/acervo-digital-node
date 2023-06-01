@@ -20,6 +20,9 @@ import {
 	AtualizandoImagemRequisicao,
 } from '../usecases/imagem/atualizando-imagem';
 import { StorageProvider } from '../../utils/StorageProvider';
+import fs from 'fs';
+import path from 'path';
+import multerConfig from '../../config/multer';
 
 export class ImagemControlador {
 	async create(req: Request, res: Response): Promise<Response> {
@@ -36,14 +39,26 @@ export class ImagemControlador {
 			storageProvider,
 		);
 
-		const imagem = await criandoImagem.executar(data);
+		let imagem = null;
 
-		console.log(data);
+		try {
+			imagem = await criandoImagem.executar(data);
+		} catch (error) {
+			if (data.file) {
+				const originalPath = path.resolve(
+					multerConfig.directory,
+					data.file.filename,
+				);
+				await fs.promises.unlink(originalPath);
+			}
+			throw error;
+		}
+
 		return res.status(201).json({
 			message: `Imagem '${data.nome}' criada com sucesso.`,
 			statusCode: 201,
 			data: {
-				id: 'imagem.id',
+				id: imagem.id,
 			},
 		} as ApiResponse);
 	}

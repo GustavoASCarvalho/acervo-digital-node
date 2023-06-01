@@ -1,9 +1,12 @@
+import path from 'path';
 import { Imagem } from '../../../domain/entities/imagem';
 import { TipoDeCargo } from '../../../domain/entities/usuario';
 import { ApiError } from '../../../helpers/types/api-error';
 import { StorageProvider } from '../../../utils/StorageProvider';
 import { ImagemRepositorio } from '../../repositories/ImagemRepositorio';
 import { UsuarioRepositorio } from '../../repositories/UsuarioRepositorio';
+import multerConfig from '../../../config/multer';
+import fs from 'fs';
 
 export type CriandoImagemRequisicao = {
 	nome: string;
